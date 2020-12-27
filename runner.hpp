@@ -2,16 +2,34 @@
 #define RUNNER_H
 
 #include<Arduino.h>
-#include<EEPROM.h>
 
 
+#define RUNNER_REGISTER_TYPE(T) \
+template <> const String runner::type<T>::name = String(#T)
+
+#define IOE_ARGS_ON(O) \
+Stream & i = O,\
+Stream & o = O,\
+Stream & e = O
 
 namespace runner {
 	const String setup = "setup";
 	const String loop = "loop";
+	const String unknown = "unknown";
 	const String empty = "";
 
-	struct NullStream : public Stream {
+
+	template <typename T>
+	struct type {
+		static const String name;
+	};
+
+	template <typename T>
+	const String type<T>::name = unknown;
+
+	RUNNER_REGISTER_TYPE(Stream);
+
+	struct NullStream : Stream {
 		int available( ) {
 			return 0;
 		}
@@ -29,141 +47,205 @@ namespace runner {
 		size_t write( uint8_t u_Data ){
 			return 0;
 		}
+
+		static NullStream dev;
 	};
 
-	Stream & Null = *new NullStream();
+	NullStream NullStream::dev = NullStream();
 
-	template<typename T>
-	struct NamedNode {
-		static T tail;
-		String const & name = empty;
-		T & next = tail;
+	struct EntryBase {
+		String const * name;
+		EntryBase * next = nullptr;
+		EntryBase(String const * name) : name(name) {}
+
+		virtual const String * type() const {
+			return &unknown;
+		}
 	};
 
 	template<typename T>
-	T NamedNode<T>::tail = T();
+	struct Entry : EntryBase {
+		Entry(
+			String const * name, T * payload
+		) : EntryBase(name), payload(payload) {}
 
-	struct Command {
-		virtual const String type() const {
-			return "";
+		T * payload;
+
+		T * ref(){
+			return payload;
 		}
 
-		virtual uint8_t run(
-			String & args,
-			Stream & i = Null,
-			Stream & o = Null,
-			Stream & e = Null
+		const String * type() const {
+			return &runner::type<T>::name;
+		}
+
+		static bool verify(EntryBase * other){
+			return runner::type<T>::name.equals(*other->type());
+		}
+	};
+
+	template<>
+	bool Entry<void>::verify(EntryBase * other) {
+		return true;
+	}
+
+	struct InterfaceBase;
+
+	struct Command {
+		virtual int8_t run (
+			InterfaceBase *,
+			String args [],
+			IOE_ARGS_ON(NullStream::dev)
 		) {
 			return 0;
 		}
-		virtual void status(Stream & i) const {}
+		virtual void status(String & name, Stream & o) const {}
 	};
 
-	struct EEPROMStream : public NullStream {
-		size_t current = 0;
-		void reset() {
-			current = 0;
-		};
+	RUNNER_REGISTER_TYPE(Command);
+
+	struct FuncCommand : Command {
+		int(*ptr) (InterfaceBase *, String[], Stream &, Stream &, Stream &);
+		FuncCommand(int(ptr) (InterfaceBase *, String[], Stream &, Stream &, Stream &)) : ptr(ptr) {}
+		int8_t run (
+			InterfaceBase * scope,
+			String args [],
+			IOE_ARGS_ON(NullStream::dev)
+		){
+			return (*ptr)(scope, args, i, o, e);
+		}
 	};
-
-	EEPROMStream eeprom = EEPROMStream();
-
-	Stream & conf = eeprom;
-
-	struct StreamEntry : NamedNode<StreamEntry> {
-
-	};
-
 
 	struct InterfaceBase {
-		Command & CommandList = Command::tail;
+		EntryBase * modules = nullptr;
 
-		void add(const String & n, Command & cmd) const {
-			cmd.name = n;
+		void add(const String * name, Command * entry) {
+			add(new Entry<Command>(name, entry));
 		};
 
-		void add(const String & n, Command * cmd) {
-			add(n, *cmd);
+		void add(const String * name, Stream * entry) {
+			add(new Entry<Stream>(name, entry));
 		};
 
-		void add(const String & n, Stream & stream) const {};
-
-		void add(const String & n, Stream * stream) {
-			add(n, *stream);
+		template<typename T>
+		void add(const char * name, T && entry) {
+			add(new String(name), entry);
 		};
 
-		int run(
+		void add(EntryBase * entry) {
+			EntryBase * head = modules;
+			modules = entry;
+			modules->next = head;
+		};
+
+		void fire(
 			String cmd,
-			Stream & i = Null,
-			Stream & o = Null,
-			Stream & e = Null
+			IOE_ARGS_ON(NullStream::dev)
 		) {
-			//run first cmd
-			return 1;
+			int argsStart = cmd.indexOf(' ');
+			String args [] = {
+				argsStart > -1? cmd.substring(0, argsStart) : cmd,
+				argsStart > -1 ? cmd.substring(argsStart + 1, cmd.length()) : empty
+			};
+			EntryBase * current = nullptr;
+			do {
+				if(current = find<Command>(args[0], current)){
+					((Entry<Command> *)current)->ref()->run(this, args, i, o, e);
+					current = current->next;
+				}
+			} while(current);
 		};
 
-		void trigger(
-			String cmd,
-			Stream & i = Null,
-			Stream & o = Null,
-			Stream & e = Null
-		) {
-			//run all cmd
-		};
+		template<typename T = void>
+		Entry<T> * find(String name, EntryBase * entry = nullptr) const {
+			entry = entry == nullptr ? modules : entry;
+
+			while(entry != nullptr){
+				if(entry->name->equals(name) && Entry<T>::verify(entry)) {
+					break;
+				} else {
+					entry = entry->next;
+				}
+			}
+			return (Entry<T> *) entry;
+		}
 	};
 
 	struct Shell {
-		InterfaceBase & ctx;
+		InterfaceBase & scope;
 		Stream & input;
 		Stream & output;
 		Stream & error;
+
+
+		struct ShellCommand : Command
+		{
+			Shell & shell;
+			ShellCommand(Shell & shell) : shell(shell) {
+
+			}
+			int8_t run (
+				InterfaceBase *,
+				String args [],
+				IOE_ARGS_ON(NullStream::dev)
+			){
+				return shell.run();
+			}
+		};
+		
+
 		Shell(
-			InterfaceBase & ctx,
-			Stream & i = Null,
-			Stream & o = Null,
-			Stream & e = Null
+			InterfaceBase & scope,
+			IOE_ARGS_ON(NullStream::dev)
 		) :
-			ctx(ctx),
+			scope(scope),
 			input(i),
 			output(o),
 			error(e)
 		{};
-		int run() {return 1;};
+		int8_t run() {
+			String cmd = input.available() ? input.readStringUntil('\n') : "";
+			if(!cmd.length()){
+				return 0;
+			}
+			int argsStart = cmd.indexOf(' ');
+			String args [] = {
+				argsStart > -1? cmd.substring(0, argsStart) : cmd,
+				argsStart > -1 ? cmd.substring(argsStart + 1, cmd.length()) : empty
+			};
+			static int8_t last = 0;
+			auto cmdPtr = scope.find<Command>(args[0]);
+			if(cmdPtr) {
+				return last = cmdPtr->ref()->run(&scope, args, this->input, this->output, this->error);
+			}
+			if(args[0].equals("?")) {
+				this->output.println(last);
+				return 0;
+			}
+			this->output.println(args[0] + " not found");
+			return last = -1;
+		};
 		void set(
-			Stream & i = Null,
-			Stream & o = Null,
-			Stream & e = Null
+			IOE_ARGS_ON(NullStream::dev)
 		) {
 			this->input = i;
 			this->output = o;
 			this->error = e;
 		}
 
-		void bind(const String evt = loop) {
-			// ctx.add(evt, [&](String & s, Stream & i, Stream & o, Stream & e){
-			// 	this->next();
-			// });
+		void bind(const String * evt = &runner::loop) {
+			scope.add(evt, new ShellCommand(*this));
 		}
 	};
 
 	struct Interface : InterfaceBase {
 		Shell shell(
-			Stream & i = Null,
-			Stream & o = Null,
-			Stream & e = Null
+			IOE_ARGS_ON(NullStream::dev)
 		) {
 			return Shell(*this, i, o, e);
 		}
 	};
 }
-
-
-
-
-
-
-
-
 
 
 #endif
