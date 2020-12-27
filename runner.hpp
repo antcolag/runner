@@ -245,6 +245,45 @@ namespace runner {
 			return Shell(*this, i, o, e);
 		}
 	};
+
+	struct StreamDump : Command {
+		int8_t run(
+			InterfaceBase * scope,
+			String args[],
+			Stream & in,
+			Stream & out,
+			Stream &
+		){
+			if(args[1].length()) {
+				const auto link = scope->find<Stream>(args[1]);
+				if(!link){
+					return -1;
+				}
+				in = *link->ref();
+			}
+			int current = 0;
+			while(in.available()){
+				char idx[9];
+				sprintf(idx, "%6d: ", current);
+				current+=8;
+				out.print(idx);
+				uint8_t data[9];
+				data[8] = '\0';
+				for(int i = 0; i < 8; i++){
+					if(!in.available()){
+						goto endloop;
+					}
+					char buff[5];
+					data[i] = in.read();
+					sprintf(buff, "%2x  ", (int) data[i]);
+					out.print(buff);
+				}
+				out.println((char *) data);
+			}
+			endloop:
+			return 0;
+		}
+	};
 }
 
 
