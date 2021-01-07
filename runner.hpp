@@ -3,6 +3,8 @@
 
 #include<Arduino.h>
 
+extern char __heap_start;
+extern void *__brkval;
 
 #define RUNNER_REGISTER_TYPE(T) \
 template <> const String runner::type<T>::name = String(#T)
@@ -52,6 +54,30 @@ namespace runner {
 	};
 
 	NullStream NullStream::dev = NullStream();
+
+	struct StringStream : Stream {
+		String * ptr;
+		int i = 0;
+		StringStream(String * s) : ptr(s) {}
+
+		int available( ) {
+			return ptr->length() - i;
+		}
+
+		void flush( ) {}
+
+		int peek( ) {
+			return ptr->charAt(i);
+		}
+
+		int read( ){
+			return ptr->charAt(i++);
+		}
+
+		size_t write( uint8_t u_Data ){
+			ptr->setCharAt(i++, u_Data);
+		}
+	};
 
 	struct EntryBase {
 		String const * name;
@@ -243,45 +269,6 @@ namespace runner {
 			IOE_ARGS_ON(NullStream::dev)
 		) {
 			return Shell(*this, i, o, e);
-		}
-	};
-
-	struct StreamDump : Command {
-		int8_t run(
-			InterfaceBase * scope,
-			String args[],
-			Stream & in,
-			Stream & out,
-			Stream &
-		){
-			if(args[1].length()) {
-				const auto link = scope->find<Stream>(args[1]);
-				if(!link){
-					return -1;
-				}
-				in = *link->ref();
-			}
-			int current = 0;
-			while(in.available()){
-				char idx[9];
-				sprintf(idx, "%6d: ", current);
-				current+=8;
-				out.print(idx);
-				uint8_t data[9];
-				data[8] = '\0';
-				for(int i = 0; i < 8; i++){
-					if(!in.available()){
-						goto endloop;
-					}
-					char buff[5];
-					data[i] = in.read();
-					sprintf(buff, "%2x  ", (int) data[i]);
-					out.print(buff);
-				}
-				out.println((char *) data);
-			}
-			endloop:
-			return 0;
 		}
 	};
 }
