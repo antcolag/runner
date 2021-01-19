@@ -2,6 +2,9 @@
 
 namespace runner {
 	struct PinModeCmd : Command {
+
+		RUNNER_COMMAND(PinModeCmd)
+
 		int8_t run(
 			InterfaceBase *,
 			String args[],
@@ -17,6 +20,9 @@ namespace runner {
 	};
 
 	struct DigitalReadCmd : Command {
+
+		RUNNER_COMMAND(DigitalReadCmd)
+
 		int8_t run(
 			InterfaceBase *,
 			String args[],
@@ -32,6 +38,9 @@ namespace runner {
 	};
 
 	struct DigitalWriteCmd : Command {
+
+		RUNNER_COMMAND(DigitalWriteCmd)
+
 		int8_t run(
 			InterfaceBase *,
 			String args[],
@@ -47,6 +56,9 @@ namespace runner {
 	};
 
 	struct AnalogReadCmd : Command {
+
+		RUNNER_COMMAND(AnalogReadCmd)
+
 		int8_t run(
 			InterfaceBase *,
 			String args[],
@@ -62,6 +74,9 @@ namespace runner {
 	};
 
 	struct AnalogWriteCmd : Command {
+
+		RUNNER_COMMAND(AnalogWriteCmd)
+
 		int8_t run(
 			InterfaceBase *,
 			String args[],

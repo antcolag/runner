@@ -7,12 +7,18 @@ extern char __heap_start;
 extern void *__brkval;
 
 #define RUNNER_REGISTER_TYPE(T) \
-template <> const String runner::type<T>::name = String(#T)
+template <> const String runner::type<T>::id = String(#T)
 
 #define IOE_ARGS_ON(O) \
 Stream & i = O,\
 Stream & o = O,\
 Stream & e = O
+
+
+#define RUNNER_COMMAND(T) \
+String type() const { \
+	return #T; \
+}
 
 namespace runner {
 	const String setup = "setup";
@@ -23,11 +29,11 @@ namespace runner {
 
 	template <typename T>
 	struct type {
-		static const String name;
+		static const String id;
 	};
 
 	template <typename T>
-	const String type<T>::name = unknown;
+	const String type<T>::id = unknown;
 
 	RUNNER_REGISTER_TYPE(Stream);
 
@@ -79,6 +85,25 @@ namespace runner {
 		}
 	};
 
+	struct InterfaceBase;
+
+	struct Command {
+		virtual int8_t run (
+			InterfaceBase *,
+			String args [],
+			IOE_ARGS_ON(NullStream::dev)
+		) {
+			return 0;
+		}
+
+		virtual void status(String & name, Stream & o) const {}
+
+		virtual RUNNER_COMMAND(unknown)
+	};
+
+	RUNNER_REGISTER_TYPE(Command);
+
+
 	struct EntryBase {
 		String const * name;
 		EntryBase * next = nullptr;
@@ -86,6 +111,10 @@ namespace runner {
 
 		virtual const String * type() const {
 			return &unknown;
+		}
+
+		virtual String info(){
+			return *name  + '\t';
 		}
 	};
 
@@ -102,11 +131,15 @@ namespace runner {
 		}
 
 		const String * type() const {
-			return &runner::type<T>::name;
+			return &runner::type<T>::id;
 		}
 
 		static bool verify(EntryBase * other){
-			return runner::type<T>::name.equals(*other->type());
+			return runner::type<T>::id.equals(*other->type());
+		}
+
+		String info(){
+			return EntryBase::info() + *type();
 		}
 	};
 
@@ -115,20 +148,10 @@ namespace runner {
 		return true;
 	}
 
-	struct InterfaceBase;
-
-	struct Command {
-		virtual int8_t run (
-			InterfaceBase *,
-			String args [],
-			IOE_ARGS_ON(NullStream::dev)
-		) {
-			return 0;
-		}
-		virtual void status(String & name, Stream & o) const {}
-	};
-
-	RUNNER_REGISTER_TYPE(Command);
+	template<>
+	String Entry<Command>::info() {
+		return EntryBase::info() + ((Command *) ref())->type();
+	}
 
 	struct FuncCommand : Command {
 		int(*ptr) (InterfaceBase *, String[], Stream &, Stream &, Stream &);
@@ -204,10 +227,12 @@ namespace runner {
 		Stream & error;
 
 
-		struct ShellCommand : Command
+		struct ShellRuntime : Command
 		{
+			RUNNER_COMMAND(ShellRuntime)
+
 			Shell & shell;
-			ShellCommand(Shell & shell) : shell(shell) {
+			ShellRuntime(Shell & shell) : shell(shell) {
 
 			}
 			int8_t run (
@@ -298,7 +323,7 @@ namespace runner {
 		}
 
 		void bind(const String * evt = &runner::loop) {
-			scope.add(evt, new ShellCommand(*this));
+			scope.add(evt, new ShellRuntime(*this));
 		}
 	};
 
@@ -310,6 +335,4 @@ namespace runner {
 		}
 	};
 }
-
-
 #endif

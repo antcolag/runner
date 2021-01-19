@@ -4,6 +4,9 @@
 namespace runner
 {
 	struct StreamDump : Command {
+
+		RUNNER_COMMAND(StreamDump)
+
 		int8_t run(
 			InterfaceBase * scope,
 			String args[],
@@ -54,6 +57,9 @@ namespace runner
 	};
 
 	struct FreeMemory : Command {
+
+		RUNNER_COMMAND(FreeMemory)
+
 		int8_t run(
 			InterfaceBase * scope,
 			String args[],
@@ -69,6 +75,9 @@ namespace runner
 	};
 
 	struct Echo : Command {
+
+		RUNNER_COMMAND(Echo)
+
 		int8_t run(
 			InterfaceBase * scope,
 			String args[],
@@ -87,6 +96,9 @@ namespace runner
 	};
 
 	struct Cat : Command {
+
+		RUNNER_COMMAND(Cat)
+
 		int8_t run(
 			InterfaceBase * scope,
 			String args[],
@@ -95,7 +107,6 @@ namespace runner
 			Stream &
 		){
 			Stream * d = &in;
-			args[1].trim();
 			if(args[1].length()) {
 				auto s = scope->find<Stream>(args[1]);
 				if(s == nullptr){
@@ -109,5 +120,68 @@ namespace runner
 			}
 			return 0;
 		}
-	};	
+	};
+
+	struct Info : Command {
+
+		RUNNER_COMMAND(Info)
+
+		int8_t run(
+			InterfaceBase * scope,
+			String args[],
+			Stream & in,
+			Stream & out,
+			Stream & err
+		){
+			if(args[1].length()) {
+				auto ptr = scope->find(args[1]);
+				if(ptr == nullptr){
+					return -1;
+				}
+				out.println(ptr->info());
+			} else {
+				for(auto ptr = scope->modules; ptr != nullptr; ptr = ptr->next){
+					out.println(ptr->info());
+				}
+			}
+			return 0;
+		}
+	};
+
+	struct Status : Command {
+
+		RUNNER_COMMAND(Status)
+
+		int8_t run(
+			InterfaceBase * scope,
+			String args[],
+			Stream & in,
+			Stream & out,
+			Stream & err
+		){
+			// if args[1] print status of the command else print status of all cmd
+			return 0;
+		}
+	};
+
+	struct Flush : Command {
+
+		RUNNER_COMMAND(Flush)
+
+		int8_t run(
+			InterfaceBase * scope,
+			String args[],
+			Stream & in,
+			Stream & out,
+			Stream & err
+		){
+			auto s = scope->find<Stream>(args[1]);
+			if(s == nullptr){
+				err.println(args[1] + " not found");
+				return -1;
+			}
+			s->ref()->flush();
+			return 0;
+		}
+	};
 }
