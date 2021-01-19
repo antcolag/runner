@@ -81,6 +81,7 @@ namespace runner
 			{
 				out.write(s.read());
 			}
+			out.println();
 			return 0;
 		}
 	};
@@ -89,15 +90,19 @@ namespace runner
 		int8_t run(
 			InterfaceBase * scope,
 			String args[],
-			Stream &,
+			Stream & in,
 			Stream & out,
 			Stream &
 		){
-			auto s = scope->find<Stream>(args[1]);
-			if(s == nullptr){
-				return 1;
+			Stream * d = &in;
+			args[1].trim();
+			if(args[1].length()) {
+				auto s = scope->find<Stream>(args[1]);
+				if(s == nullptr){
+					return -1;
+				}
+				d = s->ref();
 			}
-			auto d = s->ref();
 			while (d->available())
 			{
 				out.write(d->read());
