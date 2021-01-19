@@ -89,7 +89,7 @@ namespace runner {
 			return 0;
 		}
 
-		virtual void status(String & name, Stream & o) const {}
+		virtual void status(const String & name, Stream & o) const {}
 
 		virtual RUNNER_COMMAND(unknown)
 	};
@@ -135,6 +135,7 @@ namespace runner {
 	};
 
 	struct FuncCommand : Command {
+		RUNNER_COMMAND(FuncCommand)
 		int(*ptr) (InterfaceBase *, String[], Stream &, Stream &, Stream &);
 		FuncCommand(int(ptr) (InterfaceBase *, String[], Stream &, Stream &, Stream &)) : ptr(ptr) {}
 		int8_t run (
@@ -240,7 +241,7 @@ namespace runner {
 
 	struct Interface : InterfaceBase {
 		Shell shell(
-			IOE_ARGS_ON(NullStream::dev)
+			IOE_ARGS_ON(Serial)
 		) {
 			return Shell(*this, i, o, e);
 		}

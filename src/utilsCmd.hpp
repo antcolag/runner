@@ -7,7 +7,6 @@ namespace runner
 
 
 		struct StreamDump : Command {
-
 			RUNNER_COMMAND(StreamDump)
 
 			int8_t run(
@@ -60,7 +59,6 @@ namespace runner
 		};
 
 		struct FreeMemory : Command {
-
 			RUNNER_COMMAND(FreeMemory)
 
 			int8_t run(
@@ -78,7 +76,6 @@ namespace runner
 		};
 
 		struct Echo : Command {
-
 			RUNNER_COMMAND(Echo)
 
 			int8_t run(
@@ -99,7 +96,6 @@ namespace runner
 		};
 
 		struct Cat : Command {
-
 			RUNNER_COMMAND(Cat)
 
 			int8_t run(
@@ -126,7 +122,6 @@ namespace runner
 		};
 
 		struct Info : Command {
-
 			RUNNER_COMMAND(Info)
 
 			int8_t run(
@@ -152,7 +147,6 @@ namespace runner
 		};
 
 		struct Status : Command {
-
 			RUNNER_COMMAND(Status)
 
 			int8_t run(
@@ -162,13 +156,39 @@ namespace runner
 				Stream & out,
 				Stream & err
 			){
-				// if args[1] print status of the command else print status of all cmd
+				if(args[1].length()) {
+					auto ptr = scope->find<Command>(args[1]);
+					if(ptr == nullptr){
+						return -1;
+					}
+					ptr->ref()->status(*(ptr->name), out);
+				} else {
+					for(auto ptr = scope->modules; ptr != nullptr; ptr = ptr->next){
+						if(Entry<Command>::verify(ptr)) {
+							((Entry<Command> *) ptr)->ref()->status(*(ptr->name), out);
+						}
+					}
+				}
+				return 0;
+			}
+		};
+
+		struct Trigger : Command {
+			RUNNER_COMMAND(Trigger)
+
+			int8_t run(
+				InterfaceBase * scope,
+				String args[],
+				Stream & in,
+				Stream & out,
+				Stream & err
+			){
+				scope->fire(args[1], in, out, err);
 				return 0;
 			}
 		};
 
 		struct Flush : Command {
-
 			RUNNER_COMMAND(Flush)
 
 			int8_t run(
