@@ -3,7 +3,6 @@
 namespace runner {
 	namespace cmd {
 		struct PinModeCmd : Command {
-
 			RUNNER_COMMAND(PinModeCmd)
 
 			int8_t run(
@@ -21,7 +20,6 @@ namespace runner {
 		};
 
 		struct DigitalReadCmd : Command {
-
 			RUNNER_COMMAND(DigitalReadCmd)
 
 			int8_t run(
@@ -39,7 +37,6 @@ namespace runner {
 		};
 
 		struct DigitalWriteCmd : Command {
-
 			RUNNER_COMMAND(DigitalWriteCmd)
 
 			int8_t run(
@@ -57,7 +54,6 @@ namespace runner {
 		};
 
 		struct AnalogReadCmd : Command {
-
 			RUNNER_COMMAND(AnalogReadCmd)
 
 			int8_t run(
@@ -75,7 +71,6 @@ namespace runner {
 		};
 
 		struct AnalogWriteCmd : Command {
-
 			RUNNER_COMMAND(AnalogWriteCmd)
 
 			int8_t run(
@@ -88,6 +83,23 @@ namespace runner {
 				auto s = StringStream(args + 1);
 				int a = s.parseInt(), b = s.parseInt();
 				analogWrite(a, b);
+				return 0;
+			}
+		};
+
+		struct ToneCmd : Command {
+			RUNNER_COMMAND(AnalogWriteCmd)
+
+			int8_t run(
+				InterfaceBase *,
+				String args[],
+				Stream &,
+				Stream & o,
+				Stream &
+			){
+				auto s = StringStream(args + 1);
+				int a = s.parseInt(), b = s.parseInt(), c = s.parseInt();
+				tone(a, b, c);
 				return 0;
 			}
 		};
