@@ -65,7 +65,7 @@ runner::Shell shell = os.shell(); // input output and error are linked to Serial
 struct MyCmd : runner::Command {
 	RUNNER_COMMAND(MyCmd) // adds String type() const
 	int8_t run(
-		runner::InterfaceBase * scope,
+		runner::Interface * scope,
 		String args[], // args[0] = cmd name, args[1] = argument string
 		Stream & in,
 		Stream & out,
@@ -81,7 +81,7 @@ MyCmd my{};
 
 // use FuncCommand
 auto my2 = new runner::FuncCommand([](
-		runner::InterfaceBase * scope,
+		runner::Interface * scope,
 		String args[], // args[0] = cmd name, args[1] = argument string
 		Stream & in,
 		Stream & out,

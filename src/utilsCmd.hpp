@@ -10,7 +10,7 @@ namespace runner
 			RUNNER_COMMAND(StreamDump)
 
 			int8_t run(
-				InterfaceBase * scope,
+				Interface * scope,
 				String args[],
 				Stream & input,
 				Stream & out,
@@ -62,7 +62,7 @@ namespace runner
 			RUNNER_COMMAND(FreeMemory)
 
 			int8_t run(
-				InterfaceBase * scope,
+				Interface * scope,
 				String args[],
 				Stream & input,
 				Stream & out,
@@ -79,7 +79,7 @@ namespace runner
 			RUNNER_COMMAND(Echo)
 
 			int8_t run(
-				InterfaceBase * scope,
+				Interface * scope,
 				String args[],
 				Stream & in,
 				Stream & out,
@@ -99,7 +99,7 @@ namespace runner
 			RUNNER_COMMAND(Cat)
 
 			int8_t run(
-				InterfaceBase * scope,
+				Interface * scope,
 				String args[],
 				Stream & in,
 				Stream & out,
@@ -125,7 +125,7 @@ namespace runner
 			RUNNER_COMMAND(Info)
 
 			int8_t run(
-				InterfaceBase * scope,
+				Interface * scope,
 				String args[],
 				Stream & in,
 				Stream & out,
@@ -150,7 +150,7 @@ namespace runner
 			RUNNER_COMMAND(Status)
 
 			int8_t run(
-				InterfaceBase * scope,
+				Interface * scope,
 				String args[],
 				Stream & in,
 				Stream & out,
@@ -177,7 +177,7 @@ namespace runner
 			RUNNER_COMMAND(Trigger)
 
 			int8_t run(
-				InterfaceBase * scope,
+				Interface * scope,
 				String args[],
 				Stream & in,
 				Stream & out,
@@ -192,7 +192,7 @@ namespace runner
 			RUNNER_COMMAND(Flush)
 
 			int8_t run(
-				InterfaceBase * scope,
+				Interface * scope,
 				String args[],
 				Stream & in,
 				Stream & out,

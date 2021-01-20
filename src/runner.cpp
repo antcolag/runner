@@ -1,5 +1,16 @@
 #include<runner.hpp>
 
+namespace {
+	int getStartIoe(String & rawcmd, char ids[]){
+		int min = rawcmd.length();
+		for(; *ids; ids++){
+			int c = rawcmd.indexOf(*ids);
+			min = c > 0 && c < min ? c : min;
+		}
+		return min;
+	}
+}
+
 namespace runner {
 	template <typename T>
 	const String type<T>::id = unknown;
@@ -9,6 +20,11 @@ namespace runner {
 	RUNNER_REGISTER_TYPE(Stream);
 
 	RUNNER_REGISTER_TYPE(Command);
+
+	template<typename T>
+	bool Entry<T>::verify(EntryBase * other) {
+		return runner::type<T>::id.equals(*other->type());
+	}
 
 	template<>
 	bool Entry<void>::verify(EntryBase * other) {
@@ -20,68 +36,7 @@ namespace runner {
 		return EntryBase::info() + ((Command *) ref())->type();
 	}
 
-	int8_t Shell::run() {
-		String cmd = input.available() ? input.readStringUntil('\n') : "";
-		if(!cmd.length()){
-			return 0;
-		}
-		int argsStart = cmd.indexOf(' ');
-		int i = 0;
-		String rawArgs = cmd.substring(argsStart + 1, cmd.length());
-		while(i < rawArgs.length()){
-			switch(rawArgs.charAt(i++)){
-				// case '|':	// |50 alloca un buffer di 50 byte e...?
-				case '<':
-				case '>':
-				case '&':
-				i-=2;
-				goto done;
-			}
-		}
-
-		done:
-
-		String args [] = {
-			argsStart > -1? cmd.substring(0, argsStart) : cmd,
-			argsStart > -1 ? cmd.substring(argsStart + 1, argsStart + i + 1) : empty
-		};
-
-		Stream * ioe[] = {
-			&input,
-			&output,
-			&error
-		};
-		char ids[] = "<>&";
-		for(int c = 0; c < 3; c++){
-			int f = rawArgs.indexOf(ids[c]);
-			if(f > -1 ){
-				auto curr = rawArgs.substring(f+1);
-				int end = curr.indexOf(' ');
-				auto ff = curr.substring(0, end < 0 ? curr.length() : end);
-				auto tmp = scope.find<Stream>(ff);
-				if(tmp){
-					ioe[c] = tmp->ref();
-				} else {
-					error.print(ff);
-					error.println(" not found");
-				}
-			}
-		}
-
-		static int8_t last = 0;
-		auto cmdPtr = scope.find<Command>(args[0]);
-		if(cmdPtr) {
-			return last = cmdPtr->ref()->run(&scope, args, *ioe[0], *ioe[1], *ioe[2]);
-		}
-		if(args[0].equals("?")) {
-			output.println(last);
-			return 0;
-		}
-		error.println(args[0] + " not found");
-		return last = -1;
-	}
-
-	void InterfaceBase::fire(
+	void Interface::fire(
 		String cmd,
 		Stream & i,
 		Stream & o,
@@ -92,6 +47,15 @@ namespace runner {
 			argsStart > -1? cmd.substring(0, argsStart) : cmd,
 			argsStart > -1 ? cmd.substring(argsStart + 1, cmd.length()) : empty
 		};
+		return fire(args, i, o, e);
+	};
+
+	void Interface::fire(
+		String args[],
+		Stream & i,
+		Stream & o,
+		Stream & e
+	) {
 		EntryBase * current = nullptr;
 		do {
 			if(current = find<Command>(args[0], current)){
@@ -99,5 +63,85 @@ namespace runner {
 				current = current->next;
 			}
 		} while(current);
+	}
+
+	int8_t Interface::run(
+		String cmd,
+		Stream & i,
+		Stream & o,
+		Stream & e
+	) {
+		int argsStart = cmd.indexOf(' ');
+		String args [] = {
+			argsStart > -1? cmd.substring(0, argsStart) : cmd,
+			argsStart > -1 ? cmd.substring(argsStart + 1, cmd.length()) : empty
+		};
+		return run(args, i, o, e);
 	};
+
+	int8_t Interface::run(
+		String args[],
+		Stream & i,
+		Stream & o,
+		Stream & e
+	) {
+		EntryBase * current = nullptr;
+		if(current = find<Command>(args[0], current)){
+			return ((Entry<Command> *)current)->ref()->run(this, args, i, o, e);
+		}
+		e.println(args[0] + " not found");
+		return -1;
+	};
+
+	Shell Interface::shell(
+		Stream & i,
+		Stream & o,
+		Stream & e
+	) {
+		return Shell(*this, i, o, e);
+	}
+
+	int8_t Shell::run() {
+		String rawcmd = input.available() ? input.readStringUntil('\n') : "";
+		if(!rawcmd.length()){
+			return 0;
+		}
+		char ids[] = "<>&|";
+		int i = ::getStartIoe(rawcmd, ids);
+		String cmd = rawcmd.substring(0, i);
+		String ioeArgs = rawcmd.substring(i, rawcmd.length());
+		Stream * ioe[] = {
+			&input,
+			&output,
+			&error
+		};
+		for(int c = 0; ids[c]; c++){
+			int f = ioeArgs.indexOf(ids[c]);
+			if(f > -1 ){
+				auto curr = ioeArgs.substring(f + 1, ioeArgs.length());
+				int end = curr.indexOf(' ');
+				auto ff = curr.substring(0, end < 0 ? curr.length() : end);
+				ff.trim();
+				if(ids[c] == '|') {
+					continue;
+				}
+				auto tmp = scope.find<Stream>(ff);
+				if(tmp){
+					ioe[c] = tmp->ref();
+				} else {
+					error.print(ff);
+					error.println(" not found");
+					return -1;
+				}
+			}
+		}
+
+		static int8_t last = 0;
+
+		if(cmd.equals("?")) {
+			output.println(last);
+			return 0;
+		}
+		return scope.run(cmd, *ioe[0], *ioe[1], *ioe[2]);
+	}
 }

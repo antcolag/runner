@@ -2,11 +2,11 @@
 
 namespace runner {
 	namespace cmd {
-		struct PinModeCmd : Command {
+		struct PinMode : Command {
 			RUNNER_COMMAND(PinModeCmd)
 
 			int8_t run(
-				InterfaceBase *,
+				Interface *,
 				String args[],
 				Stream &,
 				Stream & o,
@@ -19,11 +19,11 @@ namespace runner {
 			}
 		};
 
-		struct DigitalReadCmd : Command {
+		struct DigitalRead : Command {
 			RUNNER_COMMAND(DigitalReadCmd)
 
 			int8_t run(
-				InterfaceBase *,
+				Interface *,
 				String args[],
 				Stream &,
 				Stream & o,
@@ -36,11 +36,11 @@ namespace runner {
 			}
 		};
 
-		struct DigitalWriteCmd : Command {
+		struct DigitalWrite : Command {
 			RUNNER_COMMAND(DigitalWriteCmd)
 
 			int8_t run(
-				InterfaceBase *,
+				Interface *,
 				String args[],
 				Stream &,
 				Stream & o,
@@ -53,11 +53,11 @@ namespace runner {
 			}
 		};
 
-		struct AnalogReadCmd : Command {
+		struct AnalogRead : Command {
 			RUNNER_COMMAND(AnalogReadCmd)
 
 			int8_t run(
-				InterfaceBase *,
+				Interface *,
 				String args[],
 				Stream &,
 				Stream & o,
@@ -70,11 +70,11 @@ namespace runner {
 			}
 		};
 
-		struct AnalogWriteCmd : Command {
+		struct AnalogWrite : Command {
 			RUNNER_COMMAND(AnalogWriteCmd)
 
 			int8_t run(
-				InterfaceBase *,
+				Interface *,
 				String args[],
 				Stream &,
 				Stream & o,
@@ -87,11 +87,11 @@ namespace runner {
 			}
 		};
 
-		struct ToneCmd : Command {
+		struct Tone : Command {
 			RUNNER_COMMAND(AnalogWriteCmd)
 
 			int8_t run(
-				InterfaceBase *,
+				Interface *,
 				String args[],
 				Stream &,
 				Stream & o,

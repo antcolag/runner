@@ -78,11 +78,11 @@ namespace runner {
 		}
 	};
 
-	struct InterfaceBase;
+	struct Interface;
 
 	struct Command {
 		virtual int8_t run (
-			InterfaceBase *,
+			Interface *,
 			String args [],
 			IOE_ARGS_ON(NullStream::dev)
 		) {
@@ -125,9 +125,7 @@ namespace runner {
 			return &runner::type<T>::id;
 		}
 
-		static bool verify(EntryBase * other){
-			return runner::type<T>::id.equals(*other->type());
-		}
+		static bool verify(EntryBase * other);
 
 		String info(){
 			return EntryBase::info() + *type();
@@ -136,10 +134,24 @@ namespace runner {
 
 	struct FuncCommand : Command {
 		RUNNER_COMMAND(FuncCommand)
-		int8_t(*ptr) (InterfaceBase *, String[], Stream &, Stream &, Stream &);
-		FuncCommand(int8_t(ptr) (InterfaceBase *, String[], Stream &, Stream &, Stream &)) : ptr(ptr) {}
+		int8_t(*ptr) (
+			Interface *,
+			String[],
+			Stream &,
+			Stream &,
+			Stream &
+		);
+		FuncCommand(
+			int8_t(ptr) (
+				Interface *,
+				String[],
+				Stream &,
+				Stream &,
+				Stream &
+			)
+		) : ptr(ptr) {}
 		int8_t run (
-			InterfaceBase * scope,
+			Interface * scope,
 			String args [],
 			IOE_ARGS_ON(NullStream::dev)
 		){
@@ -147,7 +159,9 @@ namespace runner {
 		}
 	};
 
-	struct InterfaceBase {
+	struct Shell;
+
+	struct Interface {
 		EntryBase * modules = nullptr;
 
 		void add(const String * name, Command * entry) {
@@ -174,6 +188,21 @@ namespace runner {
 			IOE_ARGS_ON(NullStream::dev)
 		);
 
+		void fire(
+			String cmd[],
+			IOE_ARGS_ON(NullStream::dev)
+		);
+
+		int8_t run(
+			String cmd,
+			IOE_ARGS_ON(NullStream::dev)
+		);
+
+		int8_t run(
+			String cmd[],
+			IOE_ARGS_ON(NullStream::dev)
+		);
+
 		template<typename T = void>
 		Entry<T> * find(String name, EntryBase * entry = nullptr) const {
 			entry = entry == nullptr ? modules : entry;
@@ -187,10 +216,14 @@ namespace runner {
 			}
 			return (Entry<T> *) entry;
 		}
+
+		Shell shell(
+			IOE_ARGS_ON(Serial)
+		);
 	};
 
 	struct Shell {
-		InterfaceBase & scope;
+		Interface & scope;
 		Stream & input;
 		Stream & output;
 		Stream & error;
@@ -205,7 +238,7 @@ namespace runner {
 
 			}
 			int8_t run (
-				InterfaceBase *,
+				Interface *,
 				String args [],
 				IOE_ARGS_ON(NullStream::dev)
 			){
@@ -215,7 +248,7 @@ namespace runner {
 		
 
 		Shell(
-			InterfaceBase & scope,
+			Interface & scope,
 			IOE_ARGS_ON(NullStream::dev)
 		) :
 			scope(scope),
@@ -236,14 +269,6 @@ namespace runner {
 
 		void bind(const String * evt = &runner::loop) {
 			scope.add(evt, new ShellRuntime(*this));
-		}
-	};
-
-	struct Interface : InterfaceBase {
-		Shell shell(
-			IOE_ARGS_ON(Serial)
-		) {
-			return Shell(*this, i, o, e);
 		}
 	};
 }
