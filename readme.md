@@ -88,7 +88,7 @@ auto my2 = new runner::FuncCommand([](
 		Stream & err
 ){
 	out.println("doing some lambda stuff");
-	return 0;
+	return (int8_t) 0;
 });
 
 void setup() {
@@ -105,5 +105,5 @@ void loop() {
 	os.fire(runner::loop); // trigger the "loop" event
 }
 
-// call foo and bar from terminal
+// call foo and bar from Arduino ide
 ```
