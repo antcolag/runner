@@ -136,8 +136,8 @@ namespace runner {
 
 	struct FuncCommand : Command {
 		RUNNER_COMMAND(FuncCommand)
-		int(*ptr) (InterfaceBase *, String[], Stream &, Stream &, Stream &);
-		FuncCommand(int(ptr) (InterfaceBase *, String[], Stream &, Stream &, Stream &)) : ptr(ptr) {}
+		int8_t(*ptr) (InterfaceBase *, String[], Stream &, Stream &, Stream &);
+		FuncCommand(int8_t(ptr) (InterfaceBase *, String[], Stream &, Stream &, Stream &)) : ptr(ptr) {}
 		int8_t run (
 			InterfaceBase * scope,
 			String args [],
