@@ -9,6 +9,33 @@ namespace {
 		}
 		return min;
 	}
+
+	bool fillIoe(
+		String & ioeArgs,
+		runner::Interface & scope,
+		Stream & error,
+		char ids[],
+		Stream * ioe[]
+	) {
+		for(int c = 0; ids[c]; c++){
+			int f = ioeArgs.indexOf(ids[c]);
+			if(f > -1 ){
+				auto curr = ioeArgs.substring(f + 1, ioeArgs.length());
+				curr.trim();
+				int end = curr.indexOf(' ');
+				auto ff = curr.substring(0, end < 0 ? curr.length() : end);
+				auto tmp = scope.find<Stream>(ff);
+				if(tmp){
+					ioe[c] = tmp->ref();
+				} else {
+					error.print(ff);
+					error.println(" not found");
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 }
 
 namespace runner {
@@ -106,7 +133,7 @@ namespace runner {
 		if(!rawcmd.length()){
 			return 0;
 		}
-		char ids[] = "<>&|";
+		char ids[] = "<>&";
 		int i = ::getStartIoe(rawcmd, ids);
 		String cmd = rawcmd.substring(0, i);
 		String ioeArgs = rawcmd.substring(i, rawcmd.length());
@@ -115,33 +142,18 @@ namespace runner {
 			&output,
 			&error
 		};
-		for(int c = 0; ids[c]; c++){
-			int f = ioeArgs.indexOf(ids[c]);
-			if(f > -1 ){
-				auto curr = ioeArgs.substring(f + 1, ioeArgs.length());
-				int end = curr.indexOf(' ');
-				auto ff = curr.substring(0, end < 0 ? curr.length() : end);
-				ff.trim();
-				if(ids[c] == '|') {
-					continue;
-				}
-				auto tmp = scope.find<Stream>(ff);
-				if(tmp){
-					ioe[c] = tmp->ref();
-				} else {
-					error.print(ff);
-					error.println(" not found");
-					return -1;
-				}
-			}
+
+		if(!::fillIoe(ioeArgs, scope, error, ids, ioe)) {
+			return -1;
 		}
 
 		static int8_t last = 0;
 
 		if(cmd.equals("?")) {
-			output.println(last);
+			ioe[1]->println(last);
 			return 0;
 		}
-		return scope.run(cmd, *ioe[0], *ioe[1], *ioe[2]);
+
+		return last = scope.run(cmd, *ioe[0], *ioe[1], *ioe[2]);
 	}
 }

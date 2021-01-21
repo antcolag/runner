@@ -193,6 +193,24 @@ namespace runner {
 			IOE_ARGS_ON(NullStream::dev)
 		);
 
+		template<typename T>
+		void fire(
+			T cmd,
+			String i,
+			String o,
+			String e
+		) {
+			Entry<Stream> * _i = find<Stream>(i);
+			Entry<Stream> * _o = find<Stream>(o);
+			Entry<Stream> * _e = find<Stream>(e);
+			return fire(
+				cmd,
+				_i ? *_i->ref() : NullStream::dev,
+				_o ? *_o->ref() : NullStream::dev,
+				_e ? *_e->ref() : NullStream::dev
+			);
+		}
+
 		int8_t run(
 			String cmd,
 			IOE_ARGS_ON(NullStream::dev)
@@ -202,6 +220,24 @@ namespace runner {
 			String cmd[],
 			IOE_ARGS_ON(NullStream::dev)
 		);
+
+		template<typename T>
+		int8_t run(
+			T cmd,
+			String i,
+			String o,
+			String e
+		) {
+			Entry<Stream> * _i = find<Stream>(i);
+			Entry<Stream> * _o = find<Stream>(o);
+			Entry<Stream> * _e = find<Stream>(e);
+			return run(
+				cmd,
+				_i ? *_i->ref() : NullStream::dev,
+				_o ? *_o->ref() : NullStream::dev,
+				_e ? *_e->ref() : NullStream::dev
+			);
+		}
 
 		template<typename T = void>
 		Entry<T> * find(String name, EntryBase * entry = nullptr) const {
@@ -234,9 +270,7 @@ namespace runner {
 			RUNNER_COMMAND(ShellRuntime)
 
 			Shell & shell;
-			ShellRuntime(Shell & shell) : shell(shell) {
-
-			}
+			ShellRuntime(Shell & shell) : shell(shell) {}
 			int8_t run (
 				Interface *,
 				String args [],
