@@ -42,26 +42,27 @@ namespace {
 		String & cmd,
 		Stream * i,
 		Stream * o,
-		Stream * e
+		Stream * e,
+		bool rec = false
 	){
+
 		auto pipestart = cmd.indexOf('|');
 		if(pipestart >= 0){
 			pipestart++;
 			auto s = cmd.substring(pipestart).toInt();
 			if(s > scope.freeMem()){
+				e->print("not enough memory");
 				return -1;
 			}
 			char buffer[s];
 			runner::PipeBuffer pipe(buffer, s);
 			pipe.flush();
-			auto curr = cmd.substring(0, pipestart);
-			curr.trim();
+			auto curr = cmd.substring(0, pipestart - 1);
 			scope.run(curr, *i, pipe, *e);
 			pipe.reading = true;
 			cmd = cmd.substring(pipestart + String(s).length());
-			return pipeline(scope, cmd, &pipe, o, e);
+			return pipeline(scope, cmd, &pipe, o, e, true);
 		} else {
-			cmd.trim();
 			return scope.run(cmd, *i, *o, *e);
 		}
 	}
@@ -114,6 +115,8 @@ namespace runner {
 	) {
 		EntryBase * current = nullptr;
 		do {
+			args[0].trim();
+			args[1].trim();
 			if(current = find<Command>(args[0], current)){
 				((Entry<Command> *)current)->ref()->run(this, args, i, o, e);
 				current = current->next;
@@ -142,6 +145,8 @@ namespace runner {
 		Stream & e
 	) {
 		EntryBase * current = nullptr;
+		args[0].trim();
+		args[1].trim();
 		if(current = find<Command>(args[0], current)){
 			return ((Entry<Command> *)current)->ref()->run(this, args, i, o, e);
 		}
