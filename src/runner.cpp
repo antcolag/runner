@@ -36,6 +36,35 @@ namespace {
 		}
 		return true;
 	}
+
+	int8_t pipeline(
+		runner::Interface & scope,
+		String & cmd,
+		Stream * i,
+		Stream * o,
+		Stream * e
+	){
+		auto pipestart = cmd.indexOf('|');
+		if(pipestart >= 0){
+			pipestart++;
+			auto s = cmd.substring(pipestart).toInt();
+			if(s > scope.freeMem()){
+				return -1;
+			}
+			char buffer[s];
+			runner::PipeBuffer pipe(buffer, s);
+			pipe.flush();
+			auto curr = cmd.substring(0, pipestart);
+			curr.trim();
+			scope.run(curr, *i, pipe, *e);
+			pipe.reading = true;
+			cmd = cmd.substring(pipestart + String(s).length());
+			return pipeline(scope, cmd, &pipe, o, e);
+		} else {
+			cmd.trim();
+			return scope.run(cmd, *i, *o, *e);
+		}
+	}
 }
 
 namespace runner {
@@ -154,6 +183,6 @@ namespace runner {
 			return 0;
 		}
 
-		return last = scope.run(cmd, *ioe[0], *ioe[1], *ioe[2]);
+		return last = ::pipeline(scope, cmd, ioe[0], ioe[1], ioe[2]);
 	}
 }

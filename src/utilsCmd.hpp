@@ -68,7 +68,7 @@ namespace runner
 				Stream & out,
 				Stream &
 			){
-				int v = (int) ((int) &v - (int) (__brkval ?: &__heap_start));
+				int v = scope->freeMem();
 				out.print(v);
 				out.println('B');
 				return v > 0;
