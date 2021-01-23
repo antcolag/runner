@@ -126,6 +126,7 @@ void setup() {
 	os.add("status", new runner::cmd::Status());
 	os.add("trigger", new runner::cmd::Trigger());
 	os.add("flush", new runner::cmd::Flush());
+	os.add("sh", new runner::cmd::Shell());
 	os.fire(runner::setup);
 	mainShell.bind();
 }
