@@ -3,7 +3,7 @@
 namespace runner {
 	namespace cmd {
 		struct PinMode : Command {
-			RUNNER_COMMAND(PinModeCmd)
+			RUNNER_COMMAND(PinMode)
 
 			int8_t run(
 				Interface *,
@@ -20,7 +20,7 @@ namespace runner {
 		};
 
 		struct DigitalRead : Command {
-			RUNNER_COMMAND(DigitalReadCmd)
+			RUNNER_COMMAND(DigitalRead)
 
 			int8_t run(
 				Interface *,
@@ -37,7 +37,7 @@ namespace runner {
 		};
 
 		struct DigitalWrite : Command {
-			RUNNER_COMMAND(DigitalWriteCmd)
+			RUNNER_COMMAND(DigitalWrite)
 
 			int8_t run(
 				Interface *,
@@ -54,7 +54,7 @@ namespace runner {
 		};
 
 		struct AnalogRead : Command {
-			RUNNER_COMMAND(AnalogReadCmd)
+			RUNNER_COMMAND(AnalogRead)
 
 			int8_t run(
 				Interface *,
@@ -71,7 +71,7 @@ namespace runner {
 		};
 
 		struct AnalogWrite : Command {
-			RUNNER_COMMAND(AnalogWriteCmd)
+			RUNNER_COMMAND(AnalogWrite)
 
 			int8_t run(
 				Interface *,
@@ -88,7 +88,7 @@ namespace runner {
 		};
 
 		struct Tone : Command {
-			RUNNER_COMMAND(AnalogWriteCmd)
+			RUNNER_COMMAND(AnalogWrite)
 
 			int8_t run(
 				Interface *,
