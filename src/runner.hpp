@@ -213,10 +213,7 @@ namespace runner {
 			return (Entry<T> *) entry;
 		}
 
-		int freeMem() const {
-			int v = (int) ((int) &v - (int) (__brkval ?: &__heap_start));
-			return v;
-		}
+		int freeMem() const;
 
 		Shell shell(
 			IOE_ARGS_ON(Serial)

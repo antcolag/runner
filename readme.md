@@ -8,11 +8,12 @@ Index
 - [Runner](#Runner)
 	- [Index](#Index)
 - [What problem does it solve](#What-problem-does-it-solve)
+- [Function documentation](#Function-documentation)
 - [Usage](#Usage)
 - [Commands](#Commands)
 	- [Shipped commands](#Shipped-commands)
-		- [Arduino](#Arduino)
-		- [Utils](#Utils)
+		- [Arduino](#ArduinoCmd.hpp)
+		- [Utils](#utilsCmd.hpp)
 		- [Example](#Example)
 	- [Custom commands](#Custom-commands)
 - [Redirect input, output and error, and pipeline](#Redirect-input,-output-and-error,-and-pipeline)
@@ -29,6 +30,32 @@ This is the problem that this library solves.
 
 It also implements a simple event interface based on the same command system,
 so you can execute multiple commands when an event is triggered.
+
+Method documentation
+===
+The following is an informal list of methods and their semantics
+
+`struct Interface`
+---
+- `void add(String|char * name, Stream|Command * ptr)` add a Command or a Stream
+- `int8_t run(String|char cmd, Stream ...)` run a command on the given Streams
+- `void trigger(String|char cmd, Stream ...)` run all commands with a given name
+- `Entry<T> find<T = void>(String|char name)` find the entry associated with `name`
+- `Shell shell(Stream ...)` build a shell
+
+`struct Shell`
+---
+- `int8_t run()` runs all commands from the input Stream until there are bytes available
+- `void bind(String event = "loop")` execute the run method every `event` event (when `event` is triggered)
+- `void set(Streams ...)` set default input output and error of the shell
+
+`struct Entry<T>`
+---
+- `String const * name` get the node's name
+- `T ref()` get the `Command` or `Stream` associted with
+- `String type()` get a `string` rappresentation of T, can be "Command" or "Stream")
+- `static bool verify(EntryBase * arg)` verify that `arg` is an `Entry<T>`
+- `String info()` get a `String` rappresentation of the node
 
 Usage
 ===
@@ -74,12 +101,14 @@ You can write on the serial interfce of Arduino ide `pm 13 1`, then `pm 13 1` an
 Commands
 ===
 
+How to use shipped commands and define custom ones
+
 Shipped commands
 ---
 
-### Arduino
+This commands are already in the library, in the corresponding files
 
-this commands maps the corresponding Arduino function
+### ArduinoCmd.hpp
 
 - **`PinMode`**
 - **`DigitalRead`**
@@ -88,7 +117,9 @@ this commands maps the corresponding Arduino function
 - **`AnalogWrite`**
 - **`Tone`**
 
-### Utils
+The above commands simply map the corresponding Arduino functions
+
+### utilsCmd.hpp
 
 - **`StreamDump`** prints a hex dump of a stream, can be useful for sd or eeprom inspection
 - **`FreeMemory`** prints the amount of free memory
@@ -100,7 +131,7 @@ this commands maps the corresponding Arduino function
 - **`Flush`** invokes flush method on a stream
 - **`Shell`** invokes a shell on a stream and executes the commands on that strean until data is available
 
-*Status is available for custom commands that implement the `void status(const String &, Stream &) const` method. All the shipped methods are stateless.
+*Status is available for custom commands that implement the `void status(const String &, Stream &) const` method. All the shipped commands are stateless.
 
 ### Example
 

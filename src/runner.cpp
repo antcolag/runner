@@ -160,6 +160,11 @@ namespace runner {
 		return Shell(*this, i, o, e);
 	}
 
+	int Interface::freeMem() const {
+		int v = (int) ((int) &v - (int) (__brkval ?: &__heap_start));
+		return v;
+	}
+
 	int8_t Shell::run() {
 		while(input.available()) {
 			String rawcmd = input.readStringUntil('\n');
