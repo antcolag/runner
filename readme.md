@@ -95,10 +95,10 @@ this commands maps the corresponding Arduino function
 - **`Echo`** prints the argument
 - **`Cat`** prints the content of a file
 - **`Info`** prints the streams and commands registered in the system
-- **`Status`** prints the sequence of commands for restore the current status*
-- **`Trigger`** calls all commands with given name
-- **`Flush`** invoke flush method on a stream
-- **`Shell`** invoke a shell on a stream and executes the commands on that strean while until data is available
+- **`Status`** prints the sequence of commands to restore the current status*
+- **`Trigger`** calls all commands with a given name
+- **`Flush`** invokes flush method on a stream
+- **`Shell`** invokes a shell on a stream and executes the commands on that strean until data is available
 
 *Is available for custom commands that implements the `void status(const String &, Stream &) const` method. All the above methods are stateless
 
