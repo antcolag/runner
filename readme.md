@@ -24,7 +24,7 @@ Index
 What problem does it solve?
 ===
 Sometimes, using Arduino, you feel that it could be useful to have a sort of shell executing some kind of command,
-maybe handling input/output/error as stream lines like Serial (or some other serial stuff imported with a library like sd card reader of i2c).
+maybe handling input/output/error as stream lines like Serial (or some other serial stuff imported with a library like sd card reader or the i2c from Wire.h).
 
 This is the problem that this library solves.
 
