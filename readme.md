@@ -3,6 +3,23 @@ Runner
 
 This library provides an interface for handle commands and streams.
 
+Index
+---
+- [Runner](#Runner)
+	- [Index](#Index)
+- [What problem does it resolve](#What-problem-does-it-resolve)
+- [Usage](#Usage)
+- [Commands](#Commands)
+	- [Shipped commands](#Shipped-commands)
+		- [Arduino](#Arduino)
+		- [Utils](#Utils)
+		- [Example](#Example)
+	- [Custom commands](#Custom-commands)
+- [Redirect input, output and error, and pipeline](#Redirect-input,-output-and-error,-and-pipeline)
+- [Contribution](#Usage)
+
+
+
 What problem does it resolve?
 ===
 Sometimes, using Arduino, you feel that could be userfull to have a sort of shell executing some kind of command,
@@ -79,6 +96,8 @@ this commands maps the corresponding Arduino function
 
 *Is available for custom commands that implements the `void status(const String &, Stream &) const` method. All the above methods are stateless
 
+### Example
+
 The following is an example of the whole command library included in a sketch
 
 ```C++
@@ -115,6 +134,7 @@ void loop() {
 	os.fire(runner::loop);
 }
 ```
+You can call the above commands from the Serial popup of the Arduino IDE by sending a string with the command name followed by the argument string you want to pass, for example `dw 13 1` will turn on the integrated led
 
 Anyway on an atmega328p system the above sketch is enough to fill the whole memory leaving only a couple of houndred of bytes free, is recommended indeed to use at least an Arduino mega for large sketch
 
