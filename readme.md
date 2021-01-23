@@ -36,7 +36,7 @@ Usage
 The following is an example of usage of this library along with some commands already defined in the header files provided by the library
 
 ```C++
-#include "runner.hpp" // incudes Arduino.h for String and Serial
+#include "runner.hpp" // includes Arduino.h for String and Serial
 #include "ArduinoCmd.hpp" // Arduino functions mapped as commands
 #include "utilsCmd.hpp" // FreeMemory, Info and other commands
 
