@@ -60,8 +60,14 @@ void loop() {
 }
 ```
 
-When the above sketch is flashed on the Arduino board, it provides an interface on the Serial line the pm command for pin mode,
-the dw command for digital write and a couple of utils commands to have some useful information about the system.
+When the above sketch is flashed on the Arduino board
+
+the sketch provides
+
+- an interface on the Serial line
+- `pm` command for pin mode,
+- `dw` command for digital write
+- a couple of utils commands to have some useful information about the system.
 
 You can write on the serial interfce of Arduino ide `pm 13 1`, then `pm 13 1` and `pm 13 0` to make Arduino blink at your will, also you can write `free` to get info about free memory and `info` to have name and type of all the entries added to the the system
 
@@ -84,7 +90,7 @@ this commands maps the corresponding Arduino function
 
 ### Utils
 
-- **`StreamDump`** prints an hex dump of a stream, can be userfull for sd or eeprom inspection
+- **`StreamDump`** prints a hex dump of a stream, can be useful for sd or eeprom inspection
 - **`FreeMemory`** prints the amount of free memory
 - **`Echo`** prints the argument
 - **`Cat`** prints the content of a file
