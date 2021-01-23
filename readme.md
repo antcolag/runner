@@ -213,7 +213,7 @@ void loop() {
 For `FuncCommand`s is not possible to save the status
 
 Redirect input, output and error, and pipeline
----
+===
 
 Input, output and error redirection can be made from the shell using 
 `<` for input, `>` for output and `&` for error.
