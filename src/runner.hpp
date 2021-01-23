@@ -307,6 +307,7 @@ namespace runner {
 	};
 
 	struct Shell {
+		int8_t last = 0;
 		Interface & scope;
 		Stream & input;
 		Stream & output;

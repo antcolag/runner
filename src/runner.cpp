@@ -161,31 +161,33 @@ namespace runner {
 	}
 
 	int8_t Shell::run() {
-		String rawcmd = input.available() ? input.readStringUntil('\n') : "";
-		if(!rawcmd.length()){
-			return 0;
+		while(input.available()) {
+			String rawcmd = input.readStringUntil('\n');
+			if(!rawcmd.length()){
+				return 0;
+			}
+			char ids[] = "<>&";
+			int i = ::getStartIoe(rawcmd, ids);
+			String cmd = rawcmd.substring(0, i);
+			String ioeArgs = rawcmd.substring(i, rawcmd.length());
+			Stream * ioe[] = {
+				&input,
+				&output,
+				&error
+			};
+
+			if(!::fillIoe(ioeArgs, scope, error, ids, ioe)) {
+				return -1;
+			}
+
+			if(cmd.equals("?")) {
+				ioe[1]->println(last);
+				return 0;
+			}
+
+			last = ::pipeline(scope, cmd, ioe[0], ioe[1], ioe[2]);
 		}
-		char ids[] = "<>&";
-		int i = ::getStartIoe(rawcmd, ids);
-		String cmd = rawcmd.substring(0, i);
-		String ioeArgs = rawcmd.substring(i, rawcmd.length());
-		Stream * ioe[] = {
-			&input,
-			&output,
-			&error
-		};
 
-		if(!::fillIoe(ioeArgs, scope, error, ids, ioe)) {
-			return -1;
-		}
-
-		static int8_t last = 0;
-
-		if(cmd.equals("?")) {
-			ioe[1]->println(last);
-			return 0;
-		}
-
-		return last = ::pipeline(scope, cmd, ioe[0], ioe[1], ioe[2]);
+		return last;
 	}
 }

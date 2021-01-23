@@ -207,5 +207,21 @@ namespace runner
 				return 0;
 			}
 		};
+
+		struct Shell : Command {
+			RUNNER_COMMAND(Flush)
+
+			int8_t run(
+				Interface * scope,
+				String args[],
+				Stream & in,
+				Stream & out,
+				Stream & err
+			){
+				auto shell = scope->shell(in, out, err);
+				shell.run();
+				return shell.last;
+			}
+		};
 	}
 }

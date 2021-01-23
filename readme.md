@@ -75,6 +75,7 @@ this commands maps the corresponding Arduino function
 - **`Status`** prints the sequence of commands for restore the current status*
 - **`Trigger`** calls all commands with given name
 - **`Flush`** invoke flush method on a stream
+- **`Shell`** invoke a shell on a stream and executes the commands on that strean while until data is available
 
 *Is available for custom commands that implements the `void status(const String &, Stream &) const` method. All the above methods are stateless
 
@@ -200,9 +201,20 @@ For example it is possible to invoke a command from the shell in this way
 echo hello world > serial
 ```
 
-Is it possible to combine all redirection
+Is it possible to combine all redirection.
+For example, assuming there are an eeprom stream and an i2c stream registered on the system
 ```sh
-cat > serial < serial2 & eeprom
+cat > serial < i2c & eeprom
+```
+
+To store and retore the status of the system, you can use the status command in combination with the shell command
+For example, assuming an eeprom stream is availabe, it is possible to store the status on it with
+```sh
+status > eeprom
+```
+then you can restore it by calling (assuming that you have registered the `Shell` command as `sh`)
+```sh
+sh < eeprom
 ```
 
 It is also possible to combine multiple commands in a sequential pipeline using the symbol `|` followed by the size of the buffer shared among the commands
