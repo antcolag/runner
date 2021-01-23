@@ -1,7 +1,7 @@
 Runner
 ===
 
-This library provides an interface for handle commands and streams.
+The Arduino library that provides an interface for handle commands and streams.
 
 Index
 ---
