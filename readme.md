@@ -48,7 +48,76 @@ the dw command for digital write and a couple of utils commands to have some use
 
 You can write on the serial interfce of Arduino ide `pm 13 1`, then `pm 13 1` and `pm 13 0` to make Arduino blink at your will, also you can write `free` to get info about free memory and `info` to have name and type of all the entries added to the the system
 
-Define custom commands
+Commands
+===
+
+Shipped commands
+---
+
+### Arduino
+
+this commands maps the corresponding Arduino function
+
+- **`PinMode`**
+- **`DigitalRead`**
+- **`DigitalWrite`**
+- **`AnalogRead`**
+- **`AnalogWrite`**
+- **`Tone`**
+
+### Utils
+
+- **`StreamDump`** prints an hex dump of a stream, can be userfull for sd or eeprom inspection
+- **`FreeMemory`** prints the amount of free memory
+- **`Echo`** prints the argument
+- **`Cat`** prints the content of a file
+- **`Info`** prints the streams and commands registered in the system
+- **`Status`** prints the sequence of commands for restore the current status*
+- **`Trigger`** calls all commands with given name
+- **`Flush`** invoke flush method on a stream
+
+*Is available for commands that implements the `void status(const String &, Stream &) const` method
+
+The following is an example of the whole command library included in a sketch
+
+```C++
+#include "runner.hpp"
+#include "ArduinoCmd.hpp"
+#include "utilsCmd.hpp"
+
+runner::Interface os = runner::Interface();
+
+runner::Shell mainShell = os.shell();
+
+void setup() {
+	Serial.begin(9600);
+	os.add("serial", &Serial);
+	os.add("pm", new runner::cmd::PinMode());
+	os.add("dr", new runner::cmd::DigitalRead());
+	os.add("dw", new runner::cmd::DigitalWrite());
+	os.add("ar", new runner::cmd::AnalogRead());
+	os.add("aw", new runner::cmd::AnalogWrite());
+	os.add("to", new runner::cmd::Tone());
+	os.add("dump", new runner::cmd::StreamDump());
+	os.add("free", new runner::cmd::FreeMemory());
+	os.add("echo", new runner::cmd::Echo());
+	os.add("cat", new runner::cmd::Cat());
+	os.add("info", new runner::cmd::Info());
+	os.add("status", new runner::cmd::Status());
+	os.add("trigger", new runner::cmd::Trigger());
+	os.add("flush", new runner::cmd::Flush());
+	os.fire(runner::setup);
+	mainShell.bind();
+}
+
+void loop() {
+	os.fire(runner::loop);
+}
+```
+
+Anyway on an atmega328p system the above sketch is enough to fill the whole memory leaving only a couple of houndred of bytes free, is recommended indeed to use at least an Arduino mega for large sketch
+
+Custom commands
 ---
 
 In order to have a custom function you can extend the Command class or instanciate a FuncCommand class with a function reference as argument
@@ -74,6 +143,10 @@ struct MyCmd : runner::Command {
 		// do some stuff
 		out.println("doing some cool stuff");
 		return 0;
+	}
+
+	virtual void status(const String & name, Stream & o) const {
+
 	}
 };
 
@@ -107,3 +180,29 @@ void loop() {
 
 // call foo and bar from Arduino ide
 ```
+
+Redirect input, output and error, and pipeline
+---
+
+Input, output and error redirection can be made from the shell using 
+`<` for input, `>` for output and `&` for error.
+For example it is possible to invoke a command from the shell in this way
+```sh
+echo hello world > serial
+```
+
+Is it possible to combine all redirection
+```sh
+cat > serial < serial2 & eeprom
+```
+
+It is also possible to combine multiple commands in a sequential pipeline using the symbol `|` followed by the size of the buffer shared among the commands
+
+```sh
+echo hello world |12 cat > serial
+```
+
+Contribution
+===
+
+Feel free to contribute by adding requests and pull requests, I will appreciate!
