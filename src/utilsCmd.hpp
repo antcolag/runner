@@ -183,7 +183,7 @@ namespace runner
 				Stream & out,
 				Stream & err
 			){
-				scope->fire(args[1], in, out, err);
+				scope->trigger(args[1], in, out, err);
 				return 0;
 			}
 		};

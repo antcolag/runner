@@ -93,7 +93,7 @@ namespace runner {
 		return EntryBase::info() + ((Command *) ref())->type();
 	}
 
-	void Interface::fire(
+	void Interface::trigger(
 		String cmd,
 		Stream & i,
 		Stream & o,
@@ -105,10 +105,10 @@ namespace runner {
 			argsStart > -1? cmd.substring(0, argsStart) : cmd,
 			argsStart > -1 ? cmd.substring(argsStart + 1, cmd.length()) : empty
 		};
-		return fire(args, i, o, e);
+		return trigger(args, i, o, e);
 	};
 
-	void Interface::fire(
+	void Interface::trigger(
 		String args[],
 		Stream & i,
 		Stream & o,

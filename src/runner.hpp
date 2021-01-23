@@ -143,18 +143,18 @@ namespace runner {
 			modules->next = head;
 		};
 
-		void fire(
+		void trigger(
 			String cmd,
 			IOE_ARGS_ON(NullStream::dev)
 		);
 
-		void fire(
+		void trigger(
 			String cmd[],
 			IOE_ARGS_ON(NullStream::dev)
 		);
 
 		template<typename T>
-		void fire(
+		void trigger(
 			T cmd,
 			String i,
 			String o,
@@ -163,7 +163,7 @@ namespace runner {
 			Entry<Stream> * _i = find<Stream>(i);
 			Entry<Stream> * _o = find<Stream>(o);
 			Entry<Stream> * _e = find<Stream>(e);
-			return fire(
+			return trigger(
 				cmd,
 				_i ? *_i->ref() : NullStream::dev,
 				_o ? *_o->ref() : NullStream::dev,

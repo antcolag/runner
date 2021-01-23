@@ -52,11 +52,11 @@ void setup() {
 	os.add("free", new runner::cmd::FreeMemory()); // prints free memory info
 	os.add("info", new runner::cmd::Info()); // prints all the added entries
 	shell.bind(); // run the shell on an event (by defautl to the "loop" event)
-	os.fire(runner::setup); // trigger the "setup" event
+	os.trigger(runner::setup); // trigger the "setup" event
 }
 
 void loop() {
-	os.fire(runner::loop); // trigger the "loop" event
+	os.trigger(runner::loop); // trigger the "loop" event
 }
 ```
 
@@ -133,12 +133,12 @@ void setup() {
 	os.add("trigger", new runner::cmd::Trigger());
 	os.add("flush", new runner::cmd::Flush());
 	os.add("sh", new runner::cmd::Shell());
-	os.fire(runner::setup);
+	os.trigger(runner::setup);
 	mainShell.bind();
 }
 
 void loop() {
-	os.fire(runner::loop);
+	os.trigger(runner::loop);
 }
 ```
 You can call the above commands from the Serial popup of the Arduino IDE by sending a string with the command name followed by the argument string you want to pass, for example `dw 13 1` will turn on the integrated led.
@@ -206,11 +206,11 @@ void setup() {
 	os.add("status", new runner::cmd::Status());
 
 	shell.bind(); // run the shell on an event (by defautl to the "loop" event)
-	os.fire(runner::setup); // trigger the "setup" event
+	os.trigger(runner::setup); // trigger the "setup" event
 }
 
 void loop() {
-	os.fire(runner::loop); // trigger the "loop" event
+	os.trigger(runner::loop); // trigger the "loop" event
 }
 
 // call foo and bar from Arduino ide
