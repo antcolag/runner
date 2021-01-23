@@ -100,7 +100,7 @@ this commands maps the corresponding Arduino function
 - **`Flush`** invokes flush method on a stream
 - **`Shell`** invokes a shell on a stream and executes the commands on that strean until data is available
 
-*Is available for custom commands that implements the `void status(const String &, Stream &) const` method. All the above methods are stateless
+*Status is available for custom commands that implement the `void status(const String &, Stream &) const` method. All the shipped methods are stateless.
 
 ### Example
 
@@ -141,14 +141,14 @@ void loop() {
 	os.fire(runner::loop);
 }
 ```
-You can call the above commands from the Serial popup of the Arduino IDE by sending a string with the command name followed by the argument string you want to pass, for example `dw 13 1` will turn on the integrated led
+You can call the above commands from the Serial popup of the Arduino IDE by sending a string with the command name followed by the argument string you want to pass, for example `dw 13 1` will turn on the integrated led.
 
-Anyway on an atmega328p system the above sketch is enough to fill the whole memory leaving only a couple of houndred of bytes free, is recommended indeed to use at least an Arduino mega for large sketch
+Anyway on an atmega328p system the above sketch is enough to fill the whole memory leaving only a couple of hundred of bytes free, is recommended indeed to use at least an Arduino mega for large sketch.
 
 Custom commands
 ---
 
-In order to have a custom function you can extend the Command class or instanciate a FuncCommand class with a function reference as argument
+In order to have a custom function you can extend the Command class or instanciate a FuncCommand class with a function reference as argument.
 
 ```C++
 
