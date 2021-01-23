@@ -76,7 +76,7 @@ this commands maps the corresponding Arduino function
 - **`Trigger`** calls all commands with given name
 - **`Flush`** invoke flush method on a stream
 
-*Is available for commands that implements the `void status(const String &, Stream &) const` method
+*Is available for custom commands that implements the `void status(const String &, Stream &) const` method. All the above methods are stateless
 
 The following is an example of the whole command library included in a sketch
 
@@ -133,6 +133,8 @@ runner::Shell shell = os.shell(); // input output and error are linked to Serial
 // extend the Command clsss
 struct MyCmd : runner::Command {
 	RUNNER_COMMAND(MyCmd) // adds String type() const
+
+	String last;
 	int8_t run(
 		runner::Interface * scope,
 		String args[], // args[0] = cmd name, args[1] = argument string
@@ -141,12 +143,13 @@ struct MyCmd : runner::Command {
 		Stream & err
 	){
 		// do some stuff
+		last = args[1];
 		out.println("doing some cool stuff");
 		return 0;
 	}
 
-	virtual void status(const String & name, Stream & o) const {
-
+	void status(const String & name, Stream & o) const {
+		o.println(name + " " + last); // how to restore current status
 	}
 };
 
@@ -162,13 +165,17 @@ auto my2 = new runner::FuncCommand([](
 ){
 	out.println("doing some lambda stuff");
 	return (int8_t) 0;
-});
+}, "MyFuncCmd");
 
 void setup() {
 	Serial.begin(9600);
 
 	os.add("foo", &my);
 	os.add("bar", &my2);
+
+	// adding an instance of the following command will allows 
+	// invokation from the shell of the status method of MyCmd
+	os.add("status", new runner::cmd::Status());
 
 	shell.bind(); // run the shell on an event (by defautl to the "loop" event)
 	os.fire(runner::setup); // trigger the "setup" event
@@ -180,6 +187,8 @@ void loop() {
 
 // call foo and bar from Arduino ide
 ```
+
+For `FuncCommand`s is not possible to save the status
 
 Redirect input, output and error, and pipeline
 ---

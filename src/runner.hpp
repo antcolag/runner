@@ -171,7 +171,7 @@ namespace runner {
 	};
 
 	struct FuncCommand : Command {
-		RUNNER_COMMAND(FuncCommand)
+		const String name;
 		int8_t(*ptr) (
 			Interface *,
 			String[],
@@ -186,14 +186,19 @@ namespace runner {
 				Stream &,
 				Stream &,
 				Stream &
-			)
-		) : ptr(ptr) {}
+			),
+			String name = "FuncCommand"
+		) : ptr(ptr), name(name) {}
 		int8_t run (
 			Interface * scope,
 			String args [],
 			IOE_ARGS_ON(NullStream::dev)
 		){
 			return (*ptr)(scope, args, i, o, e);
+		}
+
+		String type() const {
+			return name;
 		}
 	};
 
