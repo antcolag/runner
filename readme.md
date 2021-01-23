@@ -216,7 +216,7 @@ void loop() {
 // call foo and bar from Arduino ide
 ```
 
-For `FuncCommand`s is not possible to save the status
+For `FuncCommand`s it is not possible to save the status.
 
 Redirect input, output and error, and pipeline
 ===
@@ -228,13 +228,13 @@ For example it is possible to invoke a command from the shell in this way
 echo hello world > serial
 ```
 
-Is it possible to combine all redirection.
+Is it possible to combine all the redirections.
 For example, assuming there are an eeprom stream and an i2c stream registered on the system
 ```sh
 cat > serial < i2c & eeprom
 ```
 
-To store and retore the status of the system, you can use the status command in combination with the shell command
+To store and restore the status of the system, you can use the status command in combination with the shell command
 For example, assuming an eeprom stream is availabe, it is possible to store the status on it with
 ```sh
 status > eeprom
