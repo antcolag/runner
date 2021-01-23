@@ -1,13 +1,13 @@
 Runner
 ===
 
-The Arduino library that provides an interface for handle commands and streams.
+The Arduino library that provides an interface to handle commands and streams.
 
 Index
 ---
 - [Runner](#Runner)
 	- [Index](#Index)
-- [What problem does it resolve](#What-problem-does-it-resolve)
+- [What problem does it solve](#What-problem-does-it-solve)
 - [Usage](#Usage)
 - [Commands](#Commands)
 	- [Shipped commands](#Shipped-commands)
@@ -20,9 +20,9 @@ Index
 
 
 
-What problem does it resolve?
+What problem does it solve?
 ===
-Sometimes, using Arduino, you feel that could be userfull to have a sort of shell executing some kind of command,
+Sometimes, using Arduino, you feel that it could be useful to have a sort of shell executing some kind of command,
 maybe handling input/output/error as stream lines like Serial (or some other serial stuff imported with a library like sd card reader of i2c).
 
 This is the problem that this library solves.
