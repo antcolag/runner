@@ -11,7 +11,7 @@ Index
 - [Method documentation](#Method-documentation)
 	- [`Interface`](#struct-Interface)
 	- [`Shell`](#struct-Shell)
-	- [`Entry<T>`](#struct-Entry<T>)
+	- [`Entry<T>`](#struct-Entry%3cT%3e)
 - [Usage](#Usage)
 - [Commands](#Commands)
 	- [Shipped commands](#Shipped-commands)
