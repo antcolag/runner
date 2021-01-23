@@ -30,8 +30,8 @@ runner::Shell shell = os.shell(); // input output and error are linked to Serial
 void setup() {
 	Serial.begin(9600);
 	os.add("serial", &Serial); // register Serial as "serial"
-	os.add("pm", new runner::cmd::PinModeCmd()); // add pinMode as command
-	os.add("dw", new runner::cmd::DigitalWriteCmd()); // add digitalWrite as command
+	os.add("pm", new runner::cmd::PinMode()); // add pinMode as command
+	os.add("dw", new runner::cmd::DigitalWrite()); // add digitalWrite as command
 	os.add("free", new runner::cmd::FreeMemory()); // prints free memory info
 	os.add("info", new runner::cmd::Info()); // prints all the added entries
 	shell.bind(); // run the shell on an event (by defautl to the "loop" event)
