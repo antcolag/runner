@@ -37,7 +37,7 @@ The following is an informal list of methods and their semantics
 
 `struct Interface`
 ---
-- `void add(String|char * name, Stream|Command * ptr)` add a Command or a Stream
+- `void add(String|char * name, Stream|Command * ptr)` add a Command or a Stream to the system
 - `int8_t run(String|char cmd, Stream ...)` run a command on the given Streams
 - `void trigger(String|char cmd, Stream ...)` run all commands with a given name
 - `Entry<T> find<T = void>(String|char name)` find the entry associated with `name`
@@ -46,7 +46,7 @@ The following is an informal list of methods and their semantics
 `struct Shell`
 ---
 - `int8_t run()` runs all commands from the input Stream until there are bytes available
-- `void bind(String event = "loop")` execute the run method every `event` event (when `event` is triggered)
+- `void bind(String event = "loop")` execute the run method when `event` is triggered
 - `void set(Streams ...)` set default input output and error of the shell
 
 `struct Entry<T>`
