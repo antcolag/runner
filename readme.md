@@ -52,7 +52,7 @@ The following is an informal list of methods and their semantics
 `struct Entry<T>`
 ---
 - `String const * name` the node's name
-- `T ref()` get the `Command` or `Stream` associted with
+- `T ref()` get the `Command` or `Stream` associted with the `Entry<T>`
 - `String type()` get a `string` rappresentation of T, can be "Command" or "Stream")
 - `static bool verify(EntryBase * arg)` verify that `arg` is an `Entry<T>`
 - `String info()` get a `String` rappresentation of the node
