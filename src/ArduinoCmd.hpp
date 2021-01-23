@@ -88,7 +88,7 @@ namespace runner {
 		};
 
 		struct Tone : Command {
-			RUNNER_COMMAND(AnalogWrite)
+			RUNNER_COMMAND(Tone)
 
 			int8_t run(
 				Interface *,
