@@ -143,12 +143,12 @@ void loop() {
 ```
 You can call the above commands from the Serial popup of the Arduino IDE by sending a string with the command name followed by the argument string you want to pass, for example `dw 13 1` will turn on the integrated led.
 
-Anyway on an atmega328p system the above sketch is enough to fill the whole memory leaving only a couple of hundred of bytes free, is recommended indeed to use at least an Arduino mega for large sketch.
+Anyway on an atmega328p system the above sketch is enough to fill the whole memory leaving only a couple of hundred of bytes free, it is recommended indeed to use at least an Arduino mega for large sketches.
 
 Custom commands
 ---
 
-In order to have a custom function you can extend the Command class or instanciate a FuncCommand class with a function reference as argument.
+In order to have a custom function you can extend the Command class or instantiate a FuncCommand class with a function reference as argument.
 
 ```C++
 
