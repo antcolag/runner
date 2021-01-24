@@ -239,12 +239,12 @@ void setup() {
 	// invokation from the shell of the status method of MyCmd
 	os.add("status", new runner::cmd::Status());
 
-	shell.bind(); // run the shell on an event (by defautl to the "loop" event)
-	os.trigger(runner::setup); // trigger the "setup" event
+	shell.bind(); // run the shell on an event (defautl "loop")
+	os.trigger(runner::setup); // run all commands named "setup"
 }
 
 void loop() {
-	os.trigger(runner::loop); // trigger the "loop" event
+	os.trigger(runner::loop); // run all commands named "loop"
 }
 
 // call foo and bar from Arduino ide
