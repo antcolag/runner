@@ -137,6 +137,11 @@ namespace runner {
 			add(new String(name), entry);
 		};
 
+		template<typename T>
+		void add(String name, T && entry) {
+			add(name.c_str(), entry);
+		};
+
 		void add(EntryBase * entry) {
 			EntryBase * head = modules;
 			modules = entry;

@@ -40,10 +40,10 @@ The following is an informal list of methods and their semantics
 
 `struct Interface`
 ---
-- `void add(String|char * name, Stream|Command * ptr)` add a Command or a Stream to the system
-- `int8_t run(String|char cmd, Stream ...)` run a command on the given Streams
-- `void trigger(String|char cmd, Stream ...)` run all commands with a given name
-- `Entry<T> find<T = void>(String|char name)` find the entry associated with `name`
+- `void add(String name, [Stream|Command] * ptr)` add a Command or a Stream to the system
+- `int8_t run(String cmd, Stream ...)` run a command on the given Streams
+- `void trigger(String cmd, Stream ...)` run all commands with a given name
+- `Entry<T> find<T = void>(String name)` find the entry associated with `name`
 - `Shell shell(Stream ...)` build a shell
 
 `struct Shell`
@@ -78,10 +78,18 @@ void setup() {
 	Serial.begin(9600);
 	os.add("serial", &Serial); // register Serial as "serial"
 	os.add("pm", new runner::cmd::PinMode()); // add pinMode as command
-	os.add("dw", new runner::cmd::DigitalWrite()); // add digitalWrite as command
-	os.add("free", new runner::cmd::FreeMemory()); // prints free memory info
-	os.add("info", new runner::cmd::Info()); // prints all the added entries
-	shell.bind(); // run the shell on an event (by defautl to the "loop" event)
+	os.add("dw", new runner::cmd::DigitalWrite());
+
+	// the following command prints the amount of free memory
+	os.add("free", new runner::cmd::FreeMemory());
+
+	// the following command prints a list of all the added entries
+	os.add("info", new runner::cmd::Info());
+
+	// run the shell when an event is triggered
+	// by default it is binded to the loop event 
+	shell.bind(/* "loop" */); 
+
 	os.trigger(runner::setup); // trigger the "setup" event
 }
 
@@ -90,16 +98,15 @@ void loop() {
 }
 ```
 
-When the above sketch is flashed on the Arduino board
+When the above sketch is flashed on the Arduino board,
+the sketch will provides
 
-the sketch provides
-
-- an interface on the Serial line
+- a shell interface on the Serial line
 - `pm` command for pin mode,
 - `dw` command for digital write
 - a couple of utils commands to have some useful information about the system.
 
-You can write on the serial interfce of Arduino ide `pm 13 1`, then `pm 13 1` and `pm 13 0` to make Arduino blink at your will, also you can write `free` to get info about free memory and `info` to have name and type of all the entries added to the the system
+You can write on the serial interfce of Arduino ide `pm 13 1`, then `dw 13 1` and `dw 13 0` to make Arduino blink at your will, also you can write `free` to get info about free memory and `info` to have name and type of all the entries added to the the system
 
 Commands
 ===
