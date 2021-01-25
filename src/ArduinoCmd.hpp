@@ -13,8 +13,8 @@ namespace runner {
 				Stream &
 			){
 				auto s = StringStream(args + 1);
-				int a = s.parseInt(), b = s.parseInt();
-				pinMode(a, b);
+				uint8_t pin = s.parseInt(), value = s.parseInt();
+				pinMode(pin, value);
 				return 0;
 			}
 		};
@@ -30,8 +30,8 @@ namespace runner {
 				Stream &
 			){
 				auto s = StringStream(args + 1);
-				int a = s.parseInt(), b = s.parseInt();
-				o.println(digitalRead(a));
+				uint8_t pin = s.parseInt();
+				o.println(digitalRead(pin));
 				return 0;
 			}
 		};
@@ -42,13 +42,16 @@ namespace runner {
 			int8_t run(
 				Interface *,
 				String args[],
-				Stream &,
+				Stream & i,
 				Stream & o,
 				Stream &
 			){
 				auto s = StringStream(args + 1);
-				int a = s.parseInt(), b = s.parseInt();
-				digitalWrite(a, b);
+				int pin = s.parseInt(), value = s.parseInt();
+				if(!value){
+					value = i.parseInt();
+				}
+				digitalWrite(pin, value);
 				return 0;
 			}
 		};
@@ -64,8 +67,8 @@ namespace runner {
 				Stream &
 			){
 				auto s = StringStream(args + 1);
-				int a = s.parseInt();
-				o.println(analogRead(a));
+				int pin = s.parseInt();
+				o.println(analogRead(pin));
 				return 0;
 			}
 		};
@@ -76,13 +79,16 @@ namespace runner {
 			int8_t run(
 				Interface *,
 				String args[],
-				Stream &,
+				Stream & i,
 				Stream & o,
 				Stream &
 			){
 				auto s = StringStream(args + 1);
-				int a = s.parseInt(), b = s.parseInt();
-				analogWrite(a, b);
+				int pin = s.parseInt(), value = s.parseInt();
+				if(!value){
+					value = i.parseInt();
+				}
+				analogWrite(pin, value);
 				return 0;
 			}
 		};
@@ -93,13 +99,18 @@ namespace runner {
 			int8_t run(
 				Interface *,
 				String args[],
-				Stream &,
+				Stream & i,
 				Stream & o,
 				Stream &
 			){
 				auto s = StringStream(args + 1);
-				int a = s.parseInt(), b = s.parseInt(), c = s.parseInt();
-				tone(a, b, c);
+				uint8_t pin = s.parseInt();
+				unsigned value = s.parseInt(), frequency = s.parseInt();
+				if(!frequency){
+					frequency = value;
+					value = i.parseInt();
+				}
+				tone(pin, value, frequency);
 				return 0;
 			}
 		};
