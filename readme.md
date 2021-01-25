@@ -217,8 +217,11 @@ struct MyCmd : runner::Command {
 		return 0;
 	}
 
-	void status(const String & name, Stream & o) const {
-		o.println(name + " " + last); // how to restore current status
+	virtual void status(const String & name, Stream & o) const {
+		// print the sequene of commands to restore current status
+		if(last){
+			o.println(name + " " + last);
+		}
 	}
 };
 
