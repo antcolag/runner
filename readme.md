@@ -106,7 +106,7 @@ the sketch will provides
 - `dw` command for digital write
 - a couple of utils commands to have some useful information about the system.
 
-You can write on the serial interfce of Arduino ide `pm 13 1`, then `dw 13 1` and `dw 13 0` to make Arduino blink at your will, also you can write `free` to get info about free memory and `info` to have name and type of all the entries added to the the system
+You can write on the serial interfce of the Arduino ide `pm 13 1`, then `dw 13 1` and `dw 13 0` to make Arduino blink at your will, also you can write `free` to get info about free memory and `info` to have name and type of all the entries added to the the system
 
 Commands
 ===
