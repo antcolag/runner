@@ -208,6 +208,29 @@ namespace runner
 			}
 		};
 
+		struct Wipe : Command {
+			RUNNER_COMMAND(Wipe)
+
+			int8_t run(
+				Interface * scope,
+				String args[],
+				Stream & in,
+				Stream & out,
+				Stream & err
+			){
+				auto s = scope->find<Stream>(args[1]);
+				if(s == nullptr){
+					err.println(args[1] + " not found");
+					return -1;
+				}
+				auto ptr = s->ref();
+				while(ptr->available()) {
+					ptr->write((uint8_t) 0);
+				}
+				return 0;
+			}
+		};
+
 		struct Shell : Command {
 			RUNNER_COMMAND(Flush)
 

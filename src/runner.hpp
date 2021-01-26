@@ -177,9 +177,16 @@ namespace runner {
 		}
 
 		int8_t run(
-			String cmd,
+			String const & cmd,
 			IOE_ARGS_ON(NullStream::dev)
 		);
+
+		int8_t run(
+			String const && cmd,
+			IOE_ARGS_ON(NullStream::dev)
+		) {
+			return run(cmd, i, o, e);
+		};
 
 		int8_t run(
 			String cmd[],

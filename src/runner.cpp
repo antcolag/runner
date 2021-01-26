@@ -44,7 +44,6 @@ namespace {
 		Stream * o,
 		Stream * e
 	){
-
 		auto pipestart = cmd.indexOf('|');
 		if(pipestart >= 0){
 			pipestart++;
@@ -124,15 +123,14 @@ namespace runner {
 	}
 
 	int8_t Interface::run(
-		String cmd,
+		String const & cmd,
 		Stream & i,
 		Stream & o,
 		Stream & e
 	) {
-		cmd.trim();
 		int argsStart = cmd.indexOf(' ');
 		String args [] = {
-			argsStart > -1? cmd.substring(0, argsStart) : cmd,
+			argsStart > -1 ? cmd.substring(0, argsStart) : cmd,
 			argsStart > -1 ? cmd.substring(argsStart + 1, cmd.length()) : empty
 		};
 		return run(args, i, o, e);
@@ -166,7 +164,7 @@ namespace runner {
 	}
 
 	int8_t Shell::run() {
-		while(input.available()) {
+		while(input.available() && input.peek()) {
 			String rawcmd = input.readStringUntil('\n');
 			if(!rawcmd.length()){
 				return 0;
@@ -180,7 +178,6 @@ namespace runner {
 				&output,
 				&error
 			};
-
 			if(!::fillIoe(ioeArgs, scope, error, ids, ioe)) {
 				return -1;
 			}
@@ -189,6 +186,7 @@ namespace runner {
 				ioe[1]->println(last);
 				return 0;
 			}
+			
 
 			last = ::pipeline(scope, cmd, ioe[0], ioe[1], ioe[2]);
 		}
