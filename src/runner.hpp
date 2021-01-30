@@ -133,13 +133,18 @@ namespace runner {
 		};
 
 		template<typename T>
-		void add(const char * name, T && entry) {
+		void add(String & name, T && entry) {
+			add(&name, entry);
+		};
+
+		template<typename T>
+		void add(String && name, T && entry) {
 			add(new String(name), entry);
 		};
 
 		template<typename T>
-		void add(String name, T && entry) {
-			add(name.c_str(), entry);
+		void add(const char * name, T && entry) {
+			add(new String(name), entry);
 		};
 
 		void add(EntryBase * entry) {

@@ -156,6 +156,7 @@ namespace runner
 				Stream & out,
 				Stream & err
 			){
+				args[1].trim();
 				if(args[1].length()) {
 					auto ptr = scope->find<Command>(args[1]);
 					if(ptr == nullptr){
@@ -232,7 +233,7 @@ namespace runner
 		};
 
 		struct Shell : Command {
-			RUNNER_COMMAND(Flush)
+			RUNNER_COMMAND(Shell)
 
 			int8_t run(
 				Interface * scope,
