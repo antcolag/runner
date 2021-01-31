@@ -1,13 +1,13 @@
 /**
  * Runner StreamDump command Example
  * 
- * In this file is shown the StreamDump command.
+ * In this file it is shown the StreamDump command.
  * StreamDump prints the content of a stream in an hexadecimal table,
  * with the correspondig characters on the right side of each row.
  * 
  * This exapmple contains a very simple implementation of a stream from
  * the eeprom.
- * It is a mixin of Stream and EEPROM from Arduino.
+ * It is a mixin of Stream and EEPROMClass from Arduino.
  * 
  * You can run
  * 
@@ -21,11 +21,11 @@
 #include<Arduino.h>
 #include<EEPROM.h>
 
-// build an interface to the runner library
+// Build an interface to the runner library
 runner::Interface os = runner::Interface();
 
-// create a shell for the above interface
-// by default is binded to the Serial stream,
+// Create a shell for the above interface.
+// By default a shell is attached to the Serial stream,
 // ie: os.shell(Serial, Serial, Serial);
 runner::Shell shell = os.shell();
 
@@ -34,7 +34,7 @@ struct EasyEeprom;
 void setup() {
 	Serial.begin(9600);
 
-	// run the shell on "loop" event
+	// Run the shell on "loop" event
 	shell.bind();
 
 	os.add("eeprom", new EasyEeprom());
@@ -42,7 +42,7 @@ void setup() {
 }
 
 void loop() {
-	// trigger the "loop" event
+	// Trigger the "loop" event
 	os.trigger(runner::loop);
 }
 

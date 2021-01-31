@@ -87,7 +87,7 @@ void setup() {
 	os.add("info", new runner::cmd::Info());
 
 	// run the shell when an event is triggered
-	// by default it is binded to the loop event 
+	// by default it is bound to the loop event 
 	shell.bind(/* "loop" */); 
 
 	os.trigger(runner::setup); // trigger the "setup" event

@@ -5,12 +5,12 @@
  * stores its status on the EEPROM
  * 
  * The example contains a custom command, MyCmd, that can have a status,
- * it's status is the argument passed when the command is invoked,
+ * its status is the argument passed when the command is invoked,
  * ie
  * 
  *   my foo
  * 
- * will store the string foo in it's myState property.
+ * will store the string foo in its myState property.
  * The status method of the MyCmd class will print the name of the command as
  * long as the myState string, concatenated, with a space between them,
  * that is the same `my foo` from above,
@@ -24,14 +24,14 @@
  * 
  *   sh < [Stream]
  * 
- * The implementation of the eeprom stream in this example, is very simple.
+ * The implementation of the eeprom stream in this example is very simple.
  * It is a mixin of Stream and EEPROM from Arduino.
- * The arduino eeprom could containd data that can not be parsed,
+ * The Arduino eeprom could contain data that can not be parsed,
  * to avoid errors some utils like Wipe and Flush are registered
  * Wipe => write 0 on a stream while available
  * Flush => run the flush method of a stream
  * 
- * To store the status, run the foolowing sequence
+ * To store the status, run the following sequence
  * 
  *   flush eeprom
  *   status > eeprom
@@ -48,15 +48,15 @@
 #include<Arduino.h>
 #include<EEPROM.h>
 
-// build an interface to the runner library
+// Build an interface to the runner library
 runner::Interface os = runner::Interface();
 
-// create a shell for the above interface
-// by default is binded to the Serial stream,
+// Create a shell for the above interface.
+// By default a shell is attached to the Serial stream,
 // ie: os.shell(Serial, Serial, Serial);
 runner::Shell shell = os.shell();
 
-// custom command with the status method implemented
+// Custom command with the status method implemented
 struct MyCmd : runner::Command {
 	RUNNER_COMMAND(MyCmd) // adds String type() const method
 
@@ -68,14 +68,14 @@ struct MyCmd : runner::Command {
 		Stream & out,
 		Stream & err
 	){
-		// store the status
+		// Store the status
 		myState = args[1];
 		out.println("doing some cool stuff");
 		return 0;
 	}
 
 	void status(const String & name, Stream & o) const {
-		// print the command sequene to restore current status
+		// Print the command sequene to restore current status
 		if(myState.length()){
 			o.println(name + " " + myState);
 		}
@@ -89,7 +89,7 @@ struct EasyEeprom;
 void setup() {
 	Serial.begin(9600);
 
-	// run the shell on "loop" event
+	// Run the shell on "loop" event
 	shell.bind();
 	os.add("my", my);
 	os.add("eeprom", new EasyEeprom());
@@ -100,7 +100,7 @@ void setup() {
 }
 
 void loop() {
-	// trigger the "loop" event
+	// Trigger the "loop" event
 	os.trigger(runner::loop);
 }
 
@@ -115,8 +115,9 @@ struct StreamEeprom : Stream, EEPROMClass {
 	}
 
 	virtual void flush( ) {
-		// to reset the pointr run
-		// flush eeprom
+		// to reset the pointer, run
+		// 
+		//   flush eeprom
 		current = 0;
 	}
 
