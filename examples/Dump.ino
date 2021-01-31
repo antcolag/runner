@@ -56,11 +56,7 @@ struct StreamEeprom : Stream, EEPROMClass {
 		return free > 0 ? free : 0;
 	}
 
-	virtual void flush( ) {
-		// to reset the pointr run
-		// flush eeprom
-		current = 0;
-	}
+	void flush( ) {}
 
 	int peek( ) {
 		return EEPROMClass::read(current);
