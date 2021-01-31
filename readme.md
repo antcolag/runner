@@ -37,7 +37,7 @@ so you can execute multiple commands when an event is triggered.
 
 Difference between similar libraries
 ---
-there are other libraries around that do the same but this one have a  some strengths
+there are other libraries around that do the same but this one does have a some strengths
 
 - is object oriented, so you can create multiple instances of the runner::Interface that can share some ommands
 - commands operate on streams
