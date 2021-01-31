@@ -132,6 +132,14 @@ namespace runner {
 			add(new Entry<Stream>(name, entry));
 		};
 
+		void add(const String * name, Command & entry) {
+			add(new Entry<Command>(name, &entry));
+		};
+
+		void add(const String * name, Stream & entry) {
+			add(new Entry<Stream>(name, &entry));
+		};
+
 		template<typename T>
 		void add(String & name, T && entry) {
 			add(&name, entry);
