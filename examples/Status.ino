@@ -81,8 +81,9 @@ void setup() {
 	shell.bind();
 	os.add("my", my);
 	os.add("eeprom", new EasyEeprom());
-	os.add("wipe", new runner::cmd::Flush());
+	os.add("flush", new runner::cmd::Flush());
 	os.add("wipe", new runner::cmd::Wipe());
+	os.add("status", new runner::cmd::Status());
 	os.add("sh", new runner::cmd::Shell());
 }
 
