@@ -4,22 +4,28 @@
  * In this file is shown how to make a command that
  * stores its status on the EEPROM
  * 
- * To store the status run
+ * The example contains a custom command that can have a status,
+ * it's status is the argument passed when the command is invoked,
+ * ie
+ * 
+ *   my foo
+ * 
+ * To print the status on a Stream
  * 
  *   status > [Stream]
  * 
- * To restore the status run
+ * To restore the previous status
  * 
  *   sh < [Stream]
  * 
  * The implementation of the eeprom stream in this example, is very simple.
  * It is a mixin of Stream and EEPROM from Arduino.
- * The arduino eeprom could containd data that can not de parsed,
- * to avoid errors you can use some other utils commands like Wipe and Flush
+ * The arduino eeprom could containd data that can not be parsed,
+ * to avoid errors some utils like Wipe and Flush are registered
  * Wipe => write 0 on a stream while available
  * Flush => run the flush method of a stream
  * 
- * If you want to store the status, it could be useful to run this sequence
+ * To store the status, run the foolowing sequence
  * 
  *   flush eeprom
  *   status > eeprom
