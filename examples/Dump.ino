@@ -1,5 +1,5 @@
 /**
- * Runner Dump StreamDump Example
+ * Runner StreamDump command Example
  * 
  * In this file is shown the StreamDump command.
  * StreamDump prints the content of a stream in an hexadecimal table,
