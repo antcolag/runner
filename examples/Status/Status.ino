@@ -24,9 +24,9 @@
  * 
  *   sh < [Stream]
  * 
- * The implementation of the eeprom stream in this example is very simple.
- * It is a mixin of Stream and EEPROM from Arduino.
- * The Arduino eeprom could contain data that can not be parsed,
+ * The implementation of the EEPROM stream in this example is very simple.
+ * It is a mixin of Stream and EEPROMClass from Arduino.
+ * The Arduino EEPROM could contain data that can not be parsed,
  * to avoid errors some utils like Wipe and Flush are registered
  * Wipe => write 0 on a stream while available
  * Flush => run the flush method of a stream
@@ -45,8 +45,7 @@
 
 #include "runner.hpp"
 #include "utilsCmd.hpp"
-#include<Arduino.h>
-#include<EEPROM.h>
+#include "StreamEeprom.h"
 
 // Build an interface to the runner library
 runner::Interface os = runner::Interface();
@@ -103,39 +102,3 @@ void loop() {
 	// Trigger the "loop" event
 	os.trigger(runner::loop);
 }
-
-
-
-// This is a very simple mixin of the Stream class and the EEPROMClass
-struct StreamEeprom : Stream, EEPROMClass {
-	unsigned current = 0;
-	int available( ) {
-		int free = (int) EEPROMClass::length() - (int) current;
-		return free > 0 ? free : 0;
-	}
-
-	virtual void flush( ) {
-		// to reset the pointer, run
-		// 
-		//   flush eeprom
-		current = 0;
-	}
-
-	int peek( ) {
-		return EEPROMClass::read(current);
-	}
-
-	int read( ){
-		if(available( )){
-			return EEPROMClass::read(current++);
-		}
-	}
-
-	size_t write( uint8_t u_Data ){
-		if(available( )){
-			EEPROMClass::update(current++, u_Data);
-			return 1;
-		}
-		return 0;
-	}
-};
