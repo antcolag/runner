@@ -76,6 +76,8 @@ struct EasyEeprom;
 
 void setup() {
 	Serial.begin(9600);
+
+	// run the shell on "loop" event
 	shell.bind();
 	os.add("my", my);
 	os.add("eeprom", new EasyEeprom());
@@ -85,6 +87,7 @@ void setup() {
 }
 
 void loop() {
+	// trigger the "loop" event
 	os.trigger(runner::loop);
 }
 

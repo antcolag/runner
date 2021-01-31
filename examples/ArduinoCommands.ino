@@ -11,6 +11,8 @@ runner::Shell shell = os.shell();
 
 void setup() {
 	Serial.begin(9600);
+
+	// run the shell on "loop" event
 	shell.bind();
 
 	// to call the following commands from the shell
@@ -28,5 +30,6 @@ void setup() {
 }
 
 void loop() {
+	// trigger the "loop" event
 	os.trigger(runner::loop);
 }
