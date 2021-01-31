@@ -18,7 +18,8 @@
 
 #include "runner.hpp"
 #include "utilsCmd.hpp"
-#include "StreamEeprom.h"
+#include<Arduino.h>
+#include<EEPROM.h>
 
 // Build an interface to the runner library
 runner::Interface os = runner::Interface();
@@ -28,7 +29,35 @@ runner::Interface os = runner::Interface();
 // ie: os.shell(Serial, Serial, Serial);
 runner::Shell shell = os.shell();
 
-struct EasyEeprom;
+
+// This is a very simple mixin of the Stream class and the EEPROMClass
+struct StreamEeprom : Stream, EEPROMClass {
+	unsigned current = 0;
+	int available( ) {
+		int free = (int) EEPROMClass::length() - (int) current;
+		return free > 0 ? free : 0;
+	}
+
+	void flush( ) {}
+
+	int peek( ) {
+		return EEPROMClass::read(current);
+	}
+
+	int read( ){
+		if(available( )){
+			return EEPROMClass::read(current++);
+		}
+	}
+
+	size_t write( uint8_t u_Data ){
+		if(available( )){
+			EEPROMClass::update(current++, u_Data);
+			return 1;
+		}
+		return 0;
+	}
+};
 
 void setup() {
 	Serial.begin(9600);
@@ -36,7 +65,7 @@ void setup() {
 	// Run the shell on "loop" event
 	shell.bind();
 
-	os.add("eeprom", new EasyEeprom());
+	os.add("eeprom", new StreamEeprom());
 	os.add("dump", new runner::cmd::StreamDump());
 }
 
