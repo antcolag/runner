@@ -50,16 +50,16 @@ The following is an informal list of methods and their semantics
 `struct Interface`
 ---
 - `void add(String name, [Stream|Command] * ptr)` add a Command or a Stream to the system
-- `int8_t run(String cmd, Stream ...)` run a command on the given Streams
-- `void trigger(String cmd, Stream ...)` run all commands with a given name
+- `int8_t run(String cmd, Stream in, Stream out, Stream err)` run a command on the given Streams
+- `void trigger(String cmd, Stream in, Stream out, Stream err)` run all commands with a given name
 - `Entry<T> find<T = void>(String name)` find the entry associated with `name`
-- `Shell shell(Stream ...)` build a shell
+- `Shell shell(Stream in, Stream out, Stream err)` build a shell
 
 `struct Shell`
 ---
 - `int8_t run()` runs all commands from the input Stream until there are bytes available
 - `void bind(String event = "loop")` execute the run method when `event` is triggered
-- `void set(Streams ...)` set default input output and error of the shell
+- `void set(Stream in, Stream out, Stream err)` set default input output and error of the shell
 
 `struct Entry<T>`
 ---
