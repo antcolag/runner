@@ -39,7 +39,7 @@
 // build an interface to the runner library
 runner::Interface os = runner::Interface();
 
-// create a shell for that interface
+// create a shell for the above interface
 // by default is binded to the Serial stream,
 // ie: os.shell(Serial, Serial, Serial);
 runner::Shell shell = os.shell();
