@@ -8,6 +8,7 @@ Index
 - [Runner](#Runner)
 	- [Index](#Index)
 - [What problem does it solve](#What-problem-does-it-solve)
+	- [Difference between similar libraries](#Difference-between-similar-libraries)
 - [Method documentation](#Method-documentation)
 	- [`Interface`](#struct-Interface)
 	- [`Shell`](#struct-Shell)
@@ -33,6 +34,14 @@ This is the problem that this library solves.
 
 It also implements a simple event interface based on the same command system,
 so you can execute multiple commands when an event is triggered.
+
+Difference between similar libraries
+---
+there are other libraries around that do the same but this one have a  some strengths
+
+- is object oriented, so you can create multiple instances of the runner::Interface that can share some ommands
+- commands operate on streams
+- it does provide an easy way to handle multiple commands when an event occurs
 
 Method documentation
 ===
