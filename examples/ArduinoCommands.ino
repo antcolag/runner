@@ -18,7 +18,7 @@ void setup() {
 	// [command-name] [arguments] [redirects]
 	// ie
 	// analogRead 18 |4 analogWrite 3
-	// the above command will read from A0 and write the value on the pin 3
+	// the above command will read from A0 and write the value to the pin 3
 	os.add("pinMode", new runner::cmd::PinMode());
 	os.add("digitalRead", new runner::cmd::DigitalRead());
 	os.add("digitalWrite", new runner::cmd::DigitalWrite());
