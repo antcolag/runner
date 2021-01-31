@@ -74,7 +74,7 @@ struct MyCmd : runner::Command {
 		return 0;
 	}
 
-	virtual void status(const String & name, Stream & o) const {
+	void status(const String & name, Stream & o) const {
 		// print the command sequene to restore current status
 		if(myState.length()){
 			o.println(name + " " + myState);
