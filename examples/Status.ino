@@ -4,11 +4,17 @@
  * In this file is shown how to make a command that
  * stores its status on the EEPROM
  * 
- * The example contains a custom command that can have a status,
+ * The example contains a custom command, MyCmd, that can have a status,
  * it's status is the argument passed when the command is invoked,
  * ie
  * 
  *   my foo
+ * 
+ * will store the string foo in it's myState property.
+ * The status method of the MyCmd class will print the name of the command as
+ * long as the myState string, concatenated, with a space between them,
+ * that is the same `my foo` from above,
+ * so that the current state can be saved and restored
  * 
  * To print the status on a Stream
  * 
@@ -54,7 +60,7 @@ runner::Shell shell = os.shell();
 struct MyCmd : runner::Command {
 	RUNNER_COMMAND(MyCmd) // adds String type() const method
 
-	String last;
+	String myState;
 	int8_t run(
 		runner::Interface * scope,
 		String args[], // args[0] = cmd name, args[1] = argument string
@@ -63,15 +69,15 @@ struct MyCmd : runner::Command {
 		Stream & err
 	){
 		// store the status
-		last = args[1];
+		myState = args[1];
 		out.println("doing some cool stuff");
 		return 0;
 	}
 
 	virtual void status(const String & name, Stream & o) const {
 		// print the command sequene to restore current status
-		if(last.length()){
-			o.println(name + " " + last);
+		if(myState.length()){
+			o.println(name + " " + myState);
 		}
 	}
 };
