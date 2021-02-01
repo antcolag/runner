@@ -43,7 +43,7 @@ there are other libraries around that do the same but this one does have a some 
 - it handles commands that operates on streams
 - a shell can be attached to every stream
 - it does provide an easy way to handle multiple commands when an event occurs
-- it does have stream redirection with well known symbols like `>`, `<`, `&` and `|`
+- it does offer stream redirection with well known symbols like `>`, `<`, `&` and `|`
 
 Method documentation
 ===
