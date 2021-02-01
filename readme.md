@@ -39,9 +39,11 @@ Difference between similar libraries
 ---
 there are other libraries around that do the same but this one does have a some strengths
 
-- is object oriented, so you can create multiple instances of the runner::Interface that can share some ommands
-- commands operate on streams
+- is object oriented, so you can create different instances of runner::Interface (and shells) that could share commands
+- it handles commands that operates on streams
+- a shell can be attached to every stream
 - it does provide an easy way to handle multiple commands when an event occurs
+- it does have stream redirection with well known symbols like `>`, `<`, `&` and `|`
 
 Method documentation
 ===
