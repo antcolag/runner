@@ -28,6 +28,7 @@ void setup() {
 	// 
 	// ie
 	// 
+	//   pinMode 3 1
 	//   analogRead 18 |4 analogWrite 3
 	// 
 	// The above command will read from A0 and then
