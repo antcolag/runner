@@ -27,6 +27,14 @@ namespace runner {
 	const String unknown = "unknown";
 	const String empty = "";
 
+	struct Version {
+		uint8_t major;
+		uint8_t minor;
+		uint16_t patch;
+	} const version {
+		0, 1, 0
+	};
+
 
 	template <typename T>
 	struct type {

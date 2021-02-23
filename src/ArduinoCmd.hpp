@@ -47,10 +47,8 @@ namespace runner {
 				Stream &
 			){
 				auto s = StringStream(args + 1);
-				int pin = s.parseInt(), value = s.parseInt();
-				if(!value){
-					value = i.parseInt();
-				}
+				int pin = s.parseInt(), value;
+				value = s.available() ? s.parseInt() : i.parseInt();
 				digitalWrite(pin, value);
 				return 0;
 			}
@@ -84,11 +82,10 @@ namespace runner {
 				Stream &
 			){
 				auto s = StringStream(args + 1);
-				int pin = s.parseInt(), value = s.parseInt();
-				if(!value){
-					value = i.parseInt();
-				}
+				int pin = s.parseInt(), value;
+				value = s.available() ? s.parseInt() : i.parseInt();
 				analogWrite(pin, value);
+				o.println(value);
 				return 0;
 			}
 		};
@@ -105,12 +102,14 @@ namespace runner {
 			){
 				auto s = StringStream(args + 1);
 				uint8_t pin = s.parseInt();
-				unsigned value = s.parseInt(), frequency = s.parseInt();
-				if(!frequency){
-					frequency = value;
-					value = i.parseInt();
+				unsigned frequency = s.parseInt(), duration;
+				if(s.available()){
+					duration = s.parseInt();
+				} else {
+					duration = frequency;
+					frequency = i.parseInt();
 				}
-				tone(pin, value, frequency);
+				tone(pin, frequency, duration);
 				return 0;
 			}
 		};

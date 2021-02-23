@@ -25,7 +25,9 @@ namespace runner {
 
 	struct StringStream : public Stream, public String {
 		int i = 0;
-		StringStream(String * s) : String(*s) {}
+		StringStream(String * s) : String(*s) {
+			this->setTimeout(0);
+		}
 
 		template<typename ...T>
 		StringStream(T ...s) : String(s...) {}

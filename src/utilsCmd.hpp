@@ -247,5 +247,25 @@ namespace runner
 				return shell.last;
 			}
 		};
+
+		struct PrintVersion : Command {
+			RUNNER_COMMAND(PrintVersion)
+
+			int8_t run(
+				Interface * scope,
+				String args[],
+				Stream & in,
+				Stream & out,
+				Stream & err
+			){
+				out.print(runner::version.major);
+				out.print('.');
+				out.print(runner::version.minor);
+				out.print('.');
+				out.print(runner::version.patch);
+				out.println();
+				return 0;
+			}
+		};
 	}
 }
