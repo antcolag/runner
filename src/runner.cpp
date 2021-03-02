@@ -48,7 +48,7 @@ namespace {
 		if(pipestart >= 0){
 			pipestart++;
 			auto s = cmd.substring(pipestart).toInt();
-			if(s > scope.freeMem()){
+			if(s > runner::freeMem()){
 				e->print("not enough memory");
 				return -1;
 			}
@@ -158,7 +158,7 @@ namespace runner {
 		return Shell(*this, i, o, e);
 	}
 
-	int Interface::freeMem() const {
+	int freeMem() {
 		int v = (int) ((int) &v - (int) (__brkval ?: &__heap_start));
 		return v;
 	}

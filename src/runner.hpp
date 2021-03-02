@@ -246,8 +246,6 @@ namespace runner {
 			return (Entry<T> *) entry;
 		}
 
-		int freeMem() const;
-
 		Shell shell(
 			IOE_ARGS_ON(Serial)
 		);
@@ -301,5 +299,7 @@ namespace runner {
 			scope.add(evt, new ShellRuntime(*this));
 		}
 	};
+
+	int freeMem();
 }
 #endif

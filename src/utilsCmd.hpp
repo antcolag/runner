@@ -68,7 +68,7 @@ namespace runner
 				Stream & out,
 				Stream &
 			){
-				int v = scope->freeMem();
+				int v = freeMem();
 				out.print(v);
 				out.println('B');
 				return v > 0;
