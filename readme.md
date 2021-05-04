@@ -260,7 +260,7 @@ void setup() {
 	// invokation from the shell of the status method of MyCmd
 	os.add("status", new runner::cmd::Status());
 
-	shell.bind(); // run the shell on an event (defautl "loop")
+	shell.bind(); // run the shell on an event (default "loop")
 	os.trigger(runner::setup); // run all commands named "setup"
 }
 
