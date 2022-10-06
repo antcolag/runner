@@ -32,7 +32,7 @@ namespace runner {
 		uint8_t minor;
 		uint16_t patch;
 	} const version {
-		0, 1, 0
+		0, 2, 0
 	};
 
 
@@ -257,7 +257,7 @@ namespace runner {
 		Stream & input;
 		Stream & output;
 		Stream & error;
-
+		String endSequence;
 
 		struct ShellRuntime : Command
 		{
@@ -277,12 +277,14 @@ namespace runner {
 
 		Shell(
 			Interface & scope,
-			IOE_ARGS_ON(NullStream::dev)
+			IOE_ARGS_ON(NullStream::dev),
+			String endSequence = "\r\n\003"
 		) :
 			scope(scope),
 			input(i),
 			output(o),
-			error(e)
+			error(e),
+			endSequence(endSequence)
 		{};
 
 		int8_t run();

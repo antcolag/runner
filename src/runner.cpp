@@ -29,7 +29,7 @@ namespace {
 					ioe[c] = tmp->ref();
 				} else {
 					error.print(ff);
-					error.println(" not found");
+					error.println(F(" not found"));
 					return false;
 				}
 			}
@@ -49,7 +49,7 @@ namespace {
 			pipestart++;
 			auto s = cmd.substring(pipestart).toInt();
 			if(s > runner::freeMem()){
-				e->print("not enough memory");
+				e->print(F("not enough memory"));
 				return -1;
 			}
 			char buffer[s];
@@ -146,7 +146,7 @@ namespace runner {
 		if(current = find<Command>(args[0], current)){
 			return ((Entry<Command> *)current)->ref()->run(this, args, i, o, e);
 		}
-		e.println(args[0] + " not found");
+		e.println(args[0] + F(" not found"));
 		return -1;
 	};
 
@@ -182,13 +182,14 @@ namespace runner {
 				return -1;
 			}
 
-			if(cmd.equals("?")) {
+			if(cmd.equals(F("?"))) {
 				ioe[1]->println(last);
 				return 0;
 			}
 			
 
 			last = ::pipeline(scope, cmd, ioe[0], ioe[1], ioe[2]);
+			output.print(this->endSequence);
 		}
 
 		return last;
