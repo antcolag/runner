@@ -20,14 +20,14 @@ namespace runner
 				if(args[1].length()) {
 					const auto link = scope->find<Stream>(args[1]);
 					if(!link){
-						err.println("argument not valid");
+						err.println(F("argument not valid"));
 						return 1;
 					}
 					in = link->ref();
 				}
 
 				if(!in || in == &NullStream::dev){
-					err.println("input not valid");
+					err.println(F("input not valid"));
 					return 1;
 				}
 
@@ -51,7 +51,7 @@ namespace runner
 					out.println((char *) data);
 				}
 				if(!current){
-					err.println("input not available");
+					err.println(F("input not available"));
 				}
 				endloop:
 				return 0;
@@ -201,7 +201,7 @@ namespace runner
 			){
 				auto s = scope->find<Stream>(args[1]);
 				if(s == nullptr){
-					err.println(args[1] + " not found");
+					err.println(args[1] + F(" not found"));
 					return -1;
 				}
 				s->ref()->flush();
@@ -221,7 +221,7 @@ namespace runner
 			){
 				auto s = scope->find<Stream>(args[1]);
 				if(s == nullptr){
-					err.println(args[1] + " not found");
+					err.println(args[1] + F(" not found"));
 					return -1;
 				}
 				auto ptr = s->ref();
