@@ -146,7 +146,7 @@ The above commands simply map the corresponding Arduino functions
 - **`FreeMemory`** prints the amount of free memory
 - **`Echo`** prints the argument
 - **`Cat`** prints the content of a file
-- **`Info`** prints the runner.streams and commands registered in the system
+- **`Info`** prints the list of the streams and commands registered in the system
 - **`Status`** prints the sequence of commands to restore the current status*
 - **`Trigger`** calls all commands with a given name
 - **`Flush`** invokes flush method on a stream
