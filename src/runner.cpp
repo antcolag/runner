@@ -222,6 +222,7 @@ namespace runner {
 
 			last = ::pipeline(scope, cmd, ioe[0], ioe[1], ioe[2]);
 			(this->onEndCommand)(this);
+			this->count++;
 		}
 
 		return last;

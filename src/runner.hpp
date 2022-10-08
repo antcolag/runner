@@ -276,7 +276,7 @@ namespace runner {
 		ShellHandler onStartCommand;
 		ShellHandler onEndCommand;
 
-		int count = 0;
+		unsigned int count = 0;
 
 		struct ShellRuntime : Command
 		{
@@ -301,8 +301,8 @@ namespace runner {
 			IOE_ARGS_ON(NullStream::dev)
 		) :
 			scope(scope),
-			onStartCommand(endSequence),
-			onEndCommand(startSequence),
+			onStartCommand(startSequence),
+			onEndCommand(endSequence),
 			input(i),
 			output(o),
 			error(e)
