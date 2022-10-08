@@ -1,12 +1,12 @@
 /**
  * This example shows how to use the Arduino commands shipped
- * with the "ArduinoCmd.hpp" header file, from the runner library.
+ * with the "runner.ArduinoCommands.hpp" header file, from the runner library.
  * You can call the registered commands from the serial box of the Arduino IDE
  */
 
 
 #include "runner.hpp"
-#include "ArduinoCmd.hpp"
+#include "runner.ArduinoCommands.hpp"
 
 // Build an interface to the runner library
 runner::Interface os = runner::Interface();

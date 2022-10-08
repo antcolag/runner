@@ -1,7 +1,7 @@
 Runner
 ===
 
-The Arduino library that provides an interface to handle commands and streams.
+The Arduino library that provides an interface to handle commands and runner.streams.
 
 Index
 ---
@@ -16,8 +16,8 @@ Index
 - [Usage](#Usage)
 - [Commands](#Commands)
 	- [Shipped commands](#Shipped-commands)
-		- [Arduino](#ArduinoCmd.hpp)
-		- [Utils](#utilsCmd.hpp)
+		- [Arduino](#runner.ArduinoCommands.hpp)
+		- [Utils](#runner.utils.hpp)
 		- [Example](#Example)
 	- [Custom commands](#Custom-commands)
 - [Redirect input, output and error, and pipeline](#Redirect-input,-output-and-error,-and-pipeline)
@@ -40,7 +40,7 @@ Difference between similar libraries
 there are other libraries around that do the same but this one does have a some strengths
 
 - is object oriented, so you can create different instances of runner::Interface (and shells) that could share commands
-- it handles commands that operates on streams
+- it handles commands that operates on runner.streams
 - a shell can be attached to every stream
 - it does provide an easy way to handle multiple commands when an event occurs
 - it does offer stream redirection with well known symbols like `>`, `<`, `&` and `|`
@@ -52,7 +52,7 @@ The following is an informal list of methods and their semantics
 `struct Interface`
 ---
 - `void add(String name, [Stream|Command] * ptr)` add a Command or a Stream to the system
-- `int8_t run(String cmd, Stream in, Stream out, Stream err)` run a command on the given Streams
+- `int8_t run(String cmd, Stream in, Stream out, Stream err)` run a command on the given runner.streams
 - `void trigger(String cmd, Stream in, Stream out, Stream err)` run all commands with a given name
 - `Entry<T> find<T = void>(String name)` find the entry associated with `name`
 - `Shell shell(Stream in, Stream out, Stream err)` build a shell
@@ -78,8 +78,8 @@ The following is an example of usage of this library along with some commands al
 
 ```C++
 #include "runner.hpp" // includes Arduino.h for String and Serial
-#include "ArduinoCmd.hpp" // Arduino functions mapped as commands
-#include "utilsCmd.hpp" // FreeMemory, Info and other commands
+#include "runner.ArduinoCommands.hpp" // Arduino functions mapped as commands
+#include "runner.utils.hpp" // FreeMemory, Info and other commands
 
 runner::Interface os = runner::Interface();
 
@@ -129,7 +129,7 @@ Shipped commands
 
 This commands are already in the library, in the corresponding files
 
-### ArduinoCmd.hpp
+### runner.ArduinoCommands.hpp
 
 - **`PinMode`**
 - **`DigitalRead`**
@@ -140,13 +140,13 @@ This commands are already in the library, in the corresponding files
 
 The above commands simply map the corresponding Arduino functions
 
-### utilsCmd.hpp
+### runner.utils.hpp
 
 - **`StreamDump`** prints a hex dump of a stream, can be useful for sd or eeprom inspection
 - **`FreeMemory`** prints the amount of free memory
 - **`Echo`** prints the argument
 - **`Cat`** prints the content of a file
-- **`Info`** prints the streams and commands registered in the system
+- **`Info`** prints the runner.streams and commands registered in the system
 - **`Status`** prints the sequence of commands to restore the current status*
 - **`Trigger`** calls all commands with a given name
 - **`Flush`** invokes flush method on a stream
@@ -160,8 +160,8 @@ The following is an example of the whole command library included in a sketch
 
 ```C++
 #include "runner.hpp"
-#include "ArduinoCmd.hpp"
-#include "utilsCmd.hpp"
+#include "runner.ArduinoCommands.hpp"
+#include "runner.utils.hpp"
 
 runner::Interface os = runner::Interface();
 

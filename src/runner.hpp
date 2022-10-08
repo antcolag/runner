@@ -2,7 +2,7 @@
 #define RUNNER_H
 
 #include<Arduino.h>
-#include<streams.hpp>
+#include<runner.streams.hpp>
 
 extern char __heap_start;
 extern void *__brkval;
@@ -249,6 +249,11 @@ namespace runner {
 		Shell shell(
 			IOE_ARGS_ON(Serial)
 		);
+
+		// Shell shell(
+		// 	String endSequence,
+		// 	IOE_ARGS_ON(Serial)
+		// );
 	};
 
 	struct Shell {

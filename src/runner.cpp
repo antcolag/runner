@@ -158,6 +158,24 @@ namespace runner {
 		return Shell(*this, i, o, e);
 	}
 
+	// Shell Interface::shell(
+	// 	String s,
+	// 	Stream & i,
+	// 	Stream & o,
+	// 	Stream & e
+	// ) {
+	// 	return Shell(*this, s, i, o, e);
+	// }
+
+	// Shell Interface::shell(
+	// 	Stream & i,
+	// 	Stream & o,
+	// 	Stream & e
+	// ){
+	// 	//this->shell("\r\n\003\n", i, o, e);
+	// 	//Shell(*this, &runner::endString, i, o, e);
+	// }
+
 	int freeMem() {
 		int v = (int) ((int) &v - (int) (__brkval ?: &__heap_start));
 		return v;
