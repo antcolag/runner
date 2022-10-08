@@ -155,7 +155,7 @@ namespace runner {
 		Stream & o,
 		Stream & e
 	) {
-		return Shell(*this, i, o, e);
+		return Shell(*this, &runner::Shell::defaultEndSequence, i, o, e);
 	}
 
 	// Shell Interface::shell(
@@ -180,6 +180,8 @@ namespace runner {
 		int v = (int) ((int) &v - (int) (__brkval ?: &__heap_start));
 		return v;
 	}
+
+	const String Shell::defaultEndSequence = "";
 
 	int8_t Shell::run() {
 		while(input.available() && input.peek()) {
@@ -207,7 +209,7 @@ namespace runner {
 			
 
 			last = ::pipeline(scope, cmd, ioe[0], ioe[1], ioe[2]);
-			output.print(this->endSequence);
+			output.print(*this->endSequence);
 		}
 
 		return last;

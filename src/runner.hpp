@@ -257,12 +257,15 @@ namespace runner {
 	};
 
 	struct Shell {
+
+		static const String defaultEndSequence;
+
 		int8_t last = 0;
 		Interface & scope;
 		Stream & input;
 		Stream & output;
 		Stream & error;
-		String endSequence;
+		const String * endSequence;
 
 		struct ShellRuntime : Command
 		{
@@ -282,14 +285,14 @@ namespace runner {
 
 		Shell(
 			Interface & scope,
-			IOE_ARGS_ON(NullStream::dev),
-			String endSequence = "\r\n\003"
+			const String * endSequence = &runner::Shell::defaultEndSequence,
+			IOE_ARGS_ON(NullStream::dev)
 		) :
 			scope(scope),
+			endSequence(endSequence),
 			input(i),
 			output(o),
-			error(e),
-			endSequence(endSequence)
+			error(e)
 		{};
 
 		int8_t run();
