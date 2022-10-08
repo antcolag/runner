@@ -139,7 +139,8 @@ namespace runner
 					out.println(ptr->info());
 				} else {
 					for(auto ptr = scope->modules; ptr != nullptr; ptr = ptr->next){
-						out.println(ptr->info());
+						out.print(ptr->info());
+						out.print('\n');
 					}
 				}
 				return 0;

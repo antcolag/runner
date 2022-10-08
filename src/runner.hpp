@@ -250,22 +250,33 @@ namespace runner {
 			IOE_ARGS_ON(Serial)
 		);
 
-		// Shell shell(
-		// 	String endSequence,
-		// 	IOE_ARGS_ON(Serial)
-		// );
+		Shell shell(
+			void(*endSequence)(Shell *),
+			IOE_ARGS_ON(Serial)
+		);
+
+		Shell shell(
+			void(*startSequence)(Shell *),
+			void(*endSequence)(Shell *),
+			IOE_ARGS_ON(Serial)
+		);
 	};
 
 	struct Shell {
+		using ShellHandler = void (*)(Shell *);
 
-		static const String defaultEndSequence;
+		static ShellHandler defaultStartSequence;
+		static ShellHandler defaultEndSequence;
 
 		int8_t last = 0;
 		Interface & scope;
 		Stream & input;
 		Stream & output;
 		Stream & error;
-		const String * endSequence;
+		ShellHandler onStartCommand;
+		ShellHandler onEndCommand;
+
+		int count = 0;
 
 		struct ShellRuntime : Command
 		{
@@ -285,11 +296,13 @@ namespace runner {
 
 		Shell(
 			Interface & scope,
-			const String * endSequence = &runner::Shell::defaultEndSequence,
+			ShellHandler startSequence = runner::Shell::defaultStartSequence,
+			ShellHandler endSequence = runner::Shell::defaultEndSequence,
 			IOE_ARGS_ON(NullStream::dev)
 		) :
 			scope(scope),
-			endSequence(endSequence),
+			onStartCommand(endSequence),
+			onEndCommand(startSequence),
 			input(i),
 			output(o),
 			error(e)

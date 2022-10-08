@@ -65,6 +65,8 @@ namespace {
 			return scope.run(cmd, *i, *o, *e);
 		}
 	}
+
+	void voidShellHandler(runner::Shell *) {}
 }
 
 namespace runner {
@@ -155,33 +157,43 @@ namespace runner {
 		Stream & o,
 		Stream & e
 	) {
-		return Shell(*this, &runner::Shell::defaultEndSequence, i, o, e);
+		return this->shell(
+			runner::Shell::defaultStartSequence,
+			runner::Shell::defaultEndSequence,
+			i, o, e
+		);
 	}
 
-	// Shell Interface::shell(
-	// 	String s,
-	// 	Stream & i,
-	// 	Stream & o,
-	// 	Stream & e
-	// ) {
-	// 	return Shell(*this, s, i, o, e);
-	// }
+	Shell Interface::shell(
+		void(*endSequence)(Shell *),
+		Stream & i,
+		Stream & o,
+		Stream & e
+	) {
+		return this->shell(
+			runner::Shell::defaultStartSequence,
+			endSequence,
+			i, o, e
+		);
+	}
 
-	// Shell Interface::shell(
-	// 	Stream & i,
-	// 	Stream & o,
-	// 	Stream & e
-	// ){
-	// 	//this->shell("\r\n\003\n", i, o, e);
-	// 	//Shell(*this, &runner::endString, i, o, e);
-	// }
+	Shell Interface::shell(
+		void(*startSequence)(Shell *),
+		void(*endSequence)(Shell *),
+		Stream & i,
+		Stream & o,
+		Stream & e
+	) {
+		return Shell(*this, startSequence, endSequence, i, o, e);
+	}
 
 	int freeMem() {
 		int v = (int) ((int) &v - (int) (__brkval ?: &__heap_start));
 		return v;
 	}
 
-	const String Shell::defaultEndSequence = "";
+	Shell::ShellHandler Shell::defaultStartSequence = ::voidShellHandler;
+	Shell::ShellHandler Shell::defaultEndSequence = ::voidShellHandler;
 
 	int8_t Shell::run() {
 		while(input.available() && input.peek()) {
@@ -189,6 +201,7 @@ namespace runner {
 			if(!rawcmd.length()){
 				return 0;
 			}
+			(this->onStartCommand)(this);
 			char ids[] = "<>&";
 			int i = ::getStartIoe(rawcmd, ids);
 			String cmd = rawcmd.substring(0, i);
@@ -204,12 +217,11 @@ namespace runner {
 
 			if(cmd.equals(F("?"))) {
 				ioe[1]->println(last);
-				return 0;
 			}
 			
 
 			last = ::pipeline(scope, cmd, ioe[0], ioe[1], ioe[2]);
-			output.print(*this->endSequence);
+			(this->onEndCommand)(this);
 		}
 
 		return last;
