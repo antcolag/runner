@@ -32,7 +32,7 @@ namespace runner {
 		uint8_t minor;
 		uint16_t patch;
 	} const version {
-		0, 2, 1
+		0, 2, 0
 	};
 
 

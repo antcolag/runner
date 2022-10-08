@@ -1,7 +1,7 @@
 Runner
 ===
 
-The Arduino library that provides an interface to handle commands and runner.streams.
+The Arduino library that provides an interface to handle commands and streams.
 
 Index
 ---
@@ -40,7 +40,7 @@ Difference between similar libraries
 there are other libraries around that do the same but this one does have a some strengths
 
 - is object oriented, so you can create different instances of runner::Interface (and shells) that could share commands
-- it handles commands that operates on runner.streams
+- it handles commands that operates on streams
 - a shell can be attached to every stream
 - it does provide an easy way to handle multiple commands when an event occurs
 - it does offer stream redirection with well known symbols like `>`, `<`, `&` and `|`
@@ -52,7 +52,7 @@ The following is an informal list of methods and their semantics
 `struct Interface`
 ---
 - `void add(String name, [Stream|Command] * ptr)` add a Command or a Stream to the system
-- `int8_t run(String cmd, Stream in, Stream out, Stream err)` run a command on the given runner.streams
+- `int8_t run(String cmd, Stream in, Stream out, Stream err)` run a command on the given streams
 - `void trigger(String cmd, Stream in, Stream out, Stream err)` run all commands with a given name
 - `Entry<T> find<T = void>(String name)` find the entry associated with `name`
 - `Shell shell(Stream in, Stream out, Stream err)` build a shell
@@ -154,7 +154,7 @@ The above commands simply map the corresponding Arduino functions
 
 *Status is available for custom commands that implement the `void status(const String &, Stream &) const` method. All the shipped commands are stateless.
 
-### Example
+### Examples
 
 The following is an example of the whole command library included in a sketch
 
